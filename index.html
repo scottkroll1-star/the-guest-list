@@ -68,6 +68,11 @@
             width: 100%;
             align-items: center;
         }
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+        }
         select {
             background: #333;
             color: white;
@@ -123,13 +128,13 @@
         .checkbox-container {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 16px;
+            gap: 8px;
+            font-size: 15px;
             cursor: pointer;
         }
         input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             cursor: pointer;
         }
         .filter-label {
@@ -155,14 +160,20 @@
             </select>
         </div>
         
-        <label class="checkbox-container">
-            <input type="checkbox" id="long-form" onchange="saveState()"> 
-            Long Form Only (> 20 min)
-        </label>
+        <div class="checkbox-group">
+            <label class="checkbox-container">
+                <input type="checkbox" id="long-form" onchange="saveState()"> 
+                > 20 min
+            </label>
+            <label class="checkbox-container">
+                <input type="checkbox" id="title-only" onchange="saveState()"> 
+                Title Only
+            </label>
+        </div>
         
         <div style="width: 100%;">
-            <div class="filter-label">Chaos Filter (Exclude Words/Channels):</div>
-            <input type="text" id="chaos-filter" class="chaos-input" placeholder="e.g., reaction, review, short" oninput="saveState()">
+            <div class="filter-label">Chaos Filter (Exclude Words):</div>
+            <input type="text" id="chaos-filter" class="chaos-input" placeholder="e.g., reaction, review" oninput="saveState()">
         </div>
     </div>
 
@@ -177,7 +188,7 @@
 <script>
     const guestListContainer = document.getElementById('guest-list');
 
-    // YouTube sp Parameter Matrix (Time + Duration Combinations)
+    // YouTube sp Parameter Matrix
     const spMatrix = {
         "today_any": "EgIIAg%253D%253D",
         "today_long": "EgYIAhABGAI%253D",
@@ -194,20 +205,19 @@
         if (!savedState) {
             addGuestRow('');
         } else {
-            // Restore Guests
             if (savedState.guests && savedState.guests.length > 0) {
                 savedState.guests.forEach(guest => addGuestRow(guest));
             } else {
                 addGuestRow('');
             }
-            // Restore Filters
             if (savedState.timeframe) document.getElementById('timeframe').value = savedState.timeframe;
             if (savedState.longForm) document.getElementById('long-form').checked = savedState.longForm;
+            if (savedState.titleOnly) document.getElementById('title-only').checked = savedState.titleOnly;
             if (savedState.chaos) document.getElementById('chaos-filter').value = savedState.chaos;
         }
     }
 
-    // 2. Data Structure & Universal Save Logic
+    // 2. Universal Save Logic
     function saveState() {
         const inputs = document.querySelectorAll('.guest-input');
         const guestArray = [];
@@ -217,6 +227,7 @@
             guests: guestArray,
             timeframe: document.getElementById('timeframe').value,
             longForm: document.getElementById('long-form').checked,
+            titleOnly: document.getElementById('title-only').checked,
             chaos: document.getElementById('chaos-filter').value
         };
         
@@ -250,7 +261,6 @@
         saveState();
     }
 
-    // 4. The Logical Safeguard
     function checkSafeguard() {
         const rows = document.querySelectorAll('.guest-row');
         if (rows.length === 0) {
@@ -261,12 +271,19 @@
     // 5. The Search Execution Logic
     function executeSearch() {
         const inputs = document.querySelectorAll('.guest-input');
+        const isTitleOnly = document.getElementById('title-only').checked;
         const activeNames = [];
         
-        // Compile Guests
+        // Compile Guests and Apply intitle: if checked
         inputs.forEach(input => {
             const val = input.value.trim();
-            if (val !== "") activeNames.push('"' + val + '"');
+            if (val !== "") {
+                if (isTitleOnly) {
+                    activeNames.push('intitle:"' + val + '"');
+                } else {
+                    activeNames.push('"' + val + '"');
+                }
+            }
         });
 
         if (activeNames.length === 0) {
@@ -283,28 +300,24 @@
             excludeWords.forEach(word => {
                 let cleanWord = word.trim();
                 if (cleanWord !== "") {
-                    // Strip manual minus signs if user typed them to avoid double negatives "--word"
                     if (cleanWord.startsWith('-')) cleanWord = cleanWord.substring(1);
                     searchQuery += " -" + cleanWord;
                 }
             });
         }
 
-        // Determine correct SP Parameter Matrix key
+        // Determine SP Matrix key
         const timeVal = document.getElementById('timeframe').value;
         const lengthVal = document.getElementById('long-form').checked ? "long" : "any";
-        const matrixKey = timeVal + "_" + lengthVal;
-        const timeframeCode = spMatrix[matrixKey];
+        const timeframeCode = spMatrix[timeVal + "_" + lengthVal];
         
         // URL Generation
         const baseUrl = "https://www.youtube.com/results?search_query=";
         const finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&sp=" + timeframeCode;
         
-        // Open YouTube
         window.open(finalUrl, '_blank');
     }
 
-    // Boot the app
     initApp();
 </script>
 
