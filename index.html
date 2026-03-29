@@ -72,6 +72,7 @@
             display: flex;
             gap: 15px;
             width: 100%;
+            flex-wrap: wrap; /* Prevents crowding on mobile screens */
         }
         select {
             background: #333;
@@ -169,6 +170,10 @@
                 <input type="checkbox" id="title-only" onchange="saveState()"> 
                 Title Only
             </label>
+            <label class="checkbox-container">
+                <input type="checkbox" id="english-only" onchange="saveState()"> 
+                US/English
+            </label>
         </div>
         
         <div style="width: 100%;">
@@ -204,6 +209,7 @@
         
         if (!savedState) {
             addGuestRow('');
+            document.getElementById('english-only').checked = true; // Default to English on first load
         } else {
             if (savedState.guests && savedState.guests.length > 0) {
                 savedState.guests.forEach(guest => addGuestRow(guest));
@@ -214,6 +220,13 @@
             if (savedState.longForm) document.getElementById('long-form').checked = savedState.longForm;
             if (savedState.titleOnly) document.getElementById('title-only').checked = savedState.titleOnly;
             if (savedState.chaos) document.getElementById('chaos-filter').value = savedState.chaos;
+            
+            // Check if englishOnly exists in memory, if not, default to true
+            if (savedState.englishOnly !== undefined) {
+                document.getElementById('english-only').checked = savedState.englishOnly;
+            } else {
+                document.getElementById('english-only').checked = true; 
+            }
         }
     }
 
@@ -228,6 +241,7 @@
             timeframe: document.getElementById('timeframe').value,
             longForm: document.getElementById('long-form').checked,
             titleOnly: document.getElementById('title-only').checked,
+            englishOnly: document.getElementById('english-only').checked,
             chaos: document.getElementById('chaos-filter').value
         };
         
@@ -313,7 +327,12 @@
         
         // URL Generation
         const baseUrl = "https://www.youtube.com/results?search_query=";
-        const finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&sp=" + timeframeCode;
+        let finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&sp=" + timeframeCode;
+        
+        // Apply US/English Location and Language Bias if checked
+        if (document.getElementById('english-only').checked) {
+            finalUrl += "&hl=en&gl=US";
+        }
         
         window.open(finalUrl, '_blank');
     }
