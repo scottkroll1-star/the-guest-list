@@ -174,7 +174,7 @@
         
         <div style="width: 100%;">
             <div class="filter-label">Chaos Filter (Add Extra Exclusions):</div>
-            <input type="text" id="chaos-filter" class="chaos-input" placeholder="e.g., cnbc, review, short" oninput="saveState()">
+            <input type="text" id="chaos-filter" class="chaos-input" placeholder="e.g., stock, review, short" oninput="saveState()">
         </div>
     </div>
 
@@ -294,10 +294,16 @@
 
         let searchQuery = activeNames.join(' OR ');
 
-        // Apply Embedded Anti-Drama Shield + User Chaos Filter
-        const embeddedChaos = ['reaction', 'responds', 'destroyed', 'owned', 'reacts', 'slam'];
-        const chaosInput = document.getElementById('chaos-filter').value.trim();
+        // Apply Embedded Anti-Drama & Multilingual Shield + User Chaos Filter
+        const embeddedChaos = [
+            'reaction', 'responds', 'destroyed', 'owned', 'reacts', 'slam',
+            'libro', 'resumen', 'análisis',
+            'livre', 'résumé', 'analyse',
+            'किताब', 'पुस्तक', 'सारांश', 'विश्लेषण',
+            '书', '書', '总结', '總結', '摘要', '分析'
+        ];
         
+        const chaosInput = document.getElementById('chaos-filter').value.trim();
         let allExcludeWords = [...embeddedChaos];
         
         if (chaosInput !== "") {
