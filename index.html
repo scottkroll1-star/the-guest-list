@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Guest List</title>
+    
+    <link rel="manifest" href="manifest.json">
+    
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --input-bg: #2a2a2a;
+            --accent: #ff0000;
+            --btn-hover: #cc0000;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 26px;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .search-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+        .search-btn:active { background-color: var(--btn-hover); }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background: var(--input-bg);
+            padding: 15px;
+            border-radius: 8px;
+            gap: 12px;
+        }
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: center;
+        }
+        select {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .guest-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 12px;
+            font-size: 16px;
+            background-color: var(--input-bg);
+            border: 1px solid #444;
+            color: white;
+            border-radius: 8px;
+        }
+        .chaos-input {
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 14px !important;
+            margin-top: 4px;
+        }
+        .delete-btn {
+            background-color: #444;
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .delete-btn:active { background-color: #666; }
+        
+        .add-btn {
+            background-color: transparent;
+            color: #aaa;
+            border: 2px dashed #444;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+        .add-btn:active { background-color: #222; }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .filter-label {
+            font-size: 14px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <h1>The Guest List</h1>
+
+    <button class="search-btn" onclick="executeSearch()">Search YouTube</button>
+
+    <div class="controls">
+        <div class="controls-row">
+            <label for="timeframe">Timeframe:</label>
+            <select id="timeframe" onchange="saveState()">
+                <option value="today">Today</option>
+                <option value="week" selected>This Week</option>
+                <option value="month">This Month</option>
+            </select>
+        </div>
+        
+        <label class="checkbox-container">
+            <input type="checkbox" id="long-form" onchange="saveState()"> 
+            Long Form Only (> 20 min)
+        </label>
+        
+        <div style="width: 100%;">
+            <div class="filter-label">Chaos Filter (Exclude Words/Channels):</div>
+            <input type="text" id="chaos-filter" class="chaos-input" placeholder="e.g., reaction, review, short" oninput="saveState()">
+        </div>
+    </div>
+
+    <div id="guest-list">
+        </div>
+
+    <button class="add-btn" onclick="addGuestRow('')">+ Add Another Guest</button>
+
+    <button class="search-btn" onclick="executeSearch()">Search YouTube</button>
+</div>
+
+<script>
+    const guestListContainer = document.getElementById('guest-list');
+
+    // YouTube sp Parameter Matrix (Time + Duration Combinations)
+    const spMatrix = {
+        "today_any": "EgIIAg%253D%253D",
+        "today_long": "EgYIAhABGAI%253D",
+        "week_any": "EgIIAw%253D%253D",
+        "week_long": "EgYIAxABGAI%253D",
+        "month_any": "EgIIBA%253D%253D",
+        "month_long": "EgYIBBABGAI%253D"
+    };
+
+    // 1. App Initialization Logic
+    function initApp() {
+        let savedState = JSON.parse(localStorage.getItem('theGuestListState'));
+        
+        if (!savedState) {
+            addGuestRow('');
+        } else {
+            // Restore Guests
+            if (savedState.guests && savedState.guests.length > 0) {
+                savedState.guests.forEach(guest => addGuestRow(guest));
+            } else {
+                addGuestRow('');
+            }
+            // Restore Filters
+            if (savedState.timeframe) document.getElementById('timeframe').value = savedState.timeframe;
+            if (savedState.longForm) document.getElementById('long-form').checked = savedState.longForm;
+            if (savedState.chaos) document.getElementById('chaos-filter').value = savedState.chaos;
+        }
+    }
+
+    // 2. Data Structure & Universal Save Logic
+    function saveState() {
+        const inputs = document.querySelectorAll('.guest-input');
+        const guestArray = [];
+        inputs.forEach(input => guestArray.push(input.value));
+        
+        const state = {
+            guests: guestArray,
+            timeframe: document.getElementById('timeframe').value,
+            longForm: document.getElementById('long-form').checked,
+            chaos: document.getElementById('chaos-filter').value
+        };
+        
+        localStorage.setItem('theGuestListState', JSON.stringify(state));
+    }
+
+    // 3. Interface Rendering Logic
+    function addGuestRow(value) {
+        const row = document.createElement('div');
+        row.className = 'guest-row';
+        
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'guest-input';
+        input.placeholder = 'Enter guest name...';
+        input.value = value;
+        input.addEventListener('input', saveState);
+        
+        const delBtn = document.createElement('button');
+        delBtn.className = 'delete-btn';
+        delBtn.innerHTML = 'X';
+        delBtn.onclick = function() {
+            row.remove();
+            checkSafeguard();
+            saveState();
+        };
+
+        row.appendChild(input);
+        row.appendChild(delBtn);
+        guestListContainer.appendChild(row);
+        saveState();
+    }
+
+    // 4. The Logical Safeguard
+    function checkSafeguard() {
+        const rows = document.querySelectorAll('.guest-row');
+        if (rows.length === 0) {
+            addGuestRow('');
+        }
+    }
+
+    // 5. The Search Execution Logic
+    function executeSearch() {
+        const inputs = document.querySelectorAll('.guest-input');
+        const activeNames = [];
+        
+        // Compile Guests
+        inputs.forEach(input => {
+            const val = input.value.trim();
+            if (val !== "") activeNames.push('"' + val + '"');
+        });
+
+        if (activeNames.length === 0) {
+            alert("Please enter at least one guest name on The Guest List.");
+            return;
+        }
+
+        let searchQuery = activeNames.join(' OR ');
+
+        // Apply Chaos Filter Logic
+        const chaosInput = document.getElementById('chaos-filter').value.trim();
+        if (chaosInput !== "") {
+            const excludeWords = chaosInput.split(',');
+            excludeWords.forEach(word => {
+                let cleanWord = word.trim();
+                if (cleanWord !== "") {
+                    // Strip manual minus signs if user typed them to avoid double negatives "--word"
+                    if (cleanWord.startsWith('-')) cleanWord = cleanWord.substring(1);
+                    searchQuery += " -" + cleanWord;
+                }
+            });
+        }
+
+        // Determine correct SP Parameter Matrix key
+        const timeVal = document.getElementById('timeframe').value;
+        const lengthVal = document.getElementById('long-form').checked ? "long" : "any";
+        const matrixKey = timeVal + "_" + lengthVal;
+        const timeframeCode = spMatrix[matrixKey];
+        
+        // URL Generation
+        const baseUrl = "https://www.youtube.com/results?search_query=";
+        const finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&sp=" + timeframeCode;
+        
+        // Open YouTube
+        window.open(finalUrl, '_blank');
+    }
+
+    // Boot the app
+    initApp();
+</script>
+
+</body>
+</html>
