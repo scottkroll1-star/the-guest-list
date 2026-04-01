@@ -28,7 +28,7 @@
         }
         .app-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -53,6 +53,7 @@
             text-transform: uppercase;
             margin-top: 5px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            width: 100%;
         }
         .search-btn:active { 
             background-color: var(--btn-hover); 
@@ -85,7 +86,6 @@
             outline: none;
         }
         
-        /* The simplified master toggle */
         .master-toggle {
             background: var(--input-bg);
             padding: 12px 16px;
@@ -144,7 +144,6 @@
         }
         .add-btn:active { background-color: #222; }
         
-        /* Advanced Settings Accordion */
         details {
             background: var(--panel-bg);
             padding: 12px 16px;
@@ -180,7 +179,6 @@
             min-height: 60px;
         }
         
-        /* Custom Checkbox CSS */
         input[type="checkbox"] {
             width: 20px;
             height: 20px;
@@ -208,7 +206,7 @@
         </div>
 
         <label class="master-toggle">
-            <span class="master-toggle-text">Strict Interview Mode</span>
+            <span class="master-toggle-text">Strict Title Match</span>
             <input type="checkbox" id="strict-mode" onchange="saveState()" checked>
         </label>
         
@@ -223,7 +221,7 @@
     <button class="add-btn" onclick="addGuestRow('')">+ Add Guest</button>
 
     <details>
-        <summary>Advanced Exclusions (Tap to Expand) <span>▼</span></summary>
+        <summary>Advanced Exclusions <span>▼</span></summary>
         <div class="advanced-label">Custom Chaos Words (Comma separated):</div>
         <input type="text" id="chaos-filter" class="chaos-input" placeholder="e.g., short, review" oninput="saveState()">
         
@@ -253,7 +251,7 @@
     };
 
     function initApp() {
-        let savedState = JSON.parse(localStorage.getItem('theGuestListOptimized'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListWebFinal'));
         
         if (!savedState) {
             addGuestRow('');
@@ -265,11 +263,8 @@
             }
             if (savedState.timeframe) document.getElementById('timeframe').value = savedState.timeframe;
             if (savedState.sortOrder) document.getElementById('sort-order').value = savedState.sortOrder;
-            
-            // Handle toggles safely, defaulting to true if not set
             document.getElementById('strict-mode').checked = savedState.strictMode !== false;
             document.getElementById('long-form').checked = savedState.longForm !== false;
-            
             if (savedState.chaos) document.getElementById('chaos-filter').value = savedState.chaos;
             if (savedState.bannedChannels) document.getElementById('banned-channels').value = savedState.bannedChannels;
         }
@@ -290,7 +285,7 @@
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListOptimized', JSON.stringify(state));
+        localStorage.setItem('theGuestListWebFinal', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -331,13 +326,12 @@
         const isStrictMode = document.getElementById('strict-mode').checked;
         const activeQueries = [];
         
-        // Zero-Friction Formatting Logic
+        // Base Name Query Construction
         inputs.forEach(input => {
             let val = input.value.trim();
             if (val !== "") {
                 if (isStrictMode) {
-                    // Automatically builds the advanced format block
-                    activeQueries.push(`(intitle:"${val}" (podcast OR interview OR episode OR talk OR conversation))`);
+                    activeQueries.push(`intitle:"${val}"`);
                 } else {
                     activeQueries.push(`"${val}"`);
                 }
@@ -349,8 +343,12 @@
             return;
         }
 
-        // Combine multiple guests with OR logic
-        let searchQuery = activeQueries.join(' OR ');
+        let searchQuery = activeQueries.length > 1 ? `(${activeQueries.join(' OR ')})` : activeQueries[0];
+
+        // THE KILLER ALGORITHM: The "PageRank" Proxy for Structural Authority
+        // Forcing YouTube to find the tedious administrative footprint of a real production.
+        const structuralAuthority = ` ("Apple Podcasts" OR "Spotify" OR "0:00" OR "00:00" OR "full episode" OR "Patreon")`;
+        searchQuery += structuralAuthority;
 
         // The Master Invisible Shield (Drama, Foreign, Grifters)
         const embeddedChaos = [
@@ -373,11 +371,11 @@
             let cleanWord = word.trim();
             if (cleanWord !== "") {
                 if (cleanWord.startsWith('-')) cleanWord = cleanWord.substring(1);
-                searchQuery += " -" + cleanWord;
+                searchQuery += ` -"${cleanWord}"`;
             }
         });
 
-        // Banned Channels Logic
+        // Exact Match Channel Banning
         const bannedInput = document.getElementById('banned-channels').value.trim();
         if (bannedInput !== "") {
             const bannedChannels = bannedInput.split(',');
@@ -385,18 +383,18 @@
                 let cleanChannel = channel.trim();
                 if (cleanChannel !== "") {
                     if (cleanChannel.startsWith('-')) cleanChannel = cleanChannel.substring(1).trim();
-                    searchQuery += ' -"' + cleanChannel + '"';
+                    searchQuery += ` -"${cleanChannel}"`;
                 }
             });
         }
 
-        // Generate Final URL Matrix Key
+        // URL Generation Logic
         const timeVal = document.getElementById('timeframe').value;
         const lengthVal = document.getElementById('long-form').checked ? "long" : "any";
         const sortVal = document.getElementById('sort-order').value;
+        
         const timeframeCode = spMatrix[timeVal + "_" + lengthVal + "_" + sortVal];
         
-        // Execution
         const baseUrl = "https://www.youtube.com/results?search_query=";
         let finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&sp=" + timeframeCode + "&hl=en&gl=US";
         
