@@ -89,7 +89,7 @@
             gap: 10px;
             align-items: center;
         }
-        input[type="text"] {
+        input[type="text"], textarea {
             flex-grow: 1;
             padding: 12px;
             font-size: 16px;
@@ -97,12 +97,18 @@
             border: 1px solid #444;
             color: white;
             border-radius: 8px;
+            font-family: Arial, sans-serif;
         }
         .chaos-input {
             width: 100%;
             box-sizing: border-box;
             font-size: 14px !important;
             margin-top: 4px;
+        }
+        /* Made the banned channels a text area so you can see a longer list */
+        textarea.chaos-input {
+            resize: vertical;
+            min-height: 60px;
         }
         .delete-btn {
             background-color: #444;
@@ -143,6 +149,7 @@
         .filter-label {
             font-size: 14px;
             color: #ccc;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -181,6 +188,9 @@
         <div style="width: 100%;">
             <div class="filter-label">Chaos Filter (Add Extra Exclusions):</div>
             <input type="text" id="chaos-filter" class="chaos-input" placeholder="e.g., stock, review, short" oninput="saveState()">
+            
+            <div class="filter-label">Banned Channels (Comma separated):</div>
+            <textarea id="banned-channels" class="chaos-input" placeholder="e.g., Hope World, AI Motivation" oninput="saveState()"></textarea>
         </div>
     </div>
 
@@ -228,6 +238,7 @@
             if (savedState.longForm) document.getElementById('long-form').checked = savedState.longForm;
             if (savedState.titleOnly) document.getElementById('title-only').checked = savedState.titleOnly;
             if (savedState.chaos) document.getElementById('chaos-filter').value = savedState.chaos;
+            if (savedState.bannedChannels) document.getElementById('banned-channels').value = savedState.bannedChannels;
         }
     }
 
@@ -243,7 +254,8 @@
             sortOrder: document.getElementById('sort-order').value,
             longForm: document.getElementById('long-form').checked,
             titleOnly: document.getElementById('title-only').checked,
-            chaos: document.getElementById('chaos-filter').value
+            chaos: document.getElementById('chaos-filter').value,
+            bannedChannels: document.getElementById('banned-channels').value
         };
         
         localStorage.setItem('theGuestListState', JSON.stringify(state));
@@ -315,6 +327,7 @@
 
         let searchQuery = baseNamesQuery + " (podcast OR interview OR episode OR talk OR conversation)";
 
+        // Core Word Exclusions
         const embeddedChaos = [
             'reaction', 'responds', 'destroyed', 'owned', 'reacts', 'slam',
             'libro', 'resumen', 'análisis',
@@ -340,6 +353,20 @@
                 searchQuery += " -" + cleanWord;
             }
         });
+
+        // Exact Match Channel Banning
+        const bannedInput = document.getElementById('banned-channels').value.trim();
+        if (bannedInput !== "") {
+            const bannedChannels = bannedInput.split(',');
+            bannedChannels.forEach(channel => {
+                let cleanChannel = channel.trim();
+                if (cleanChannel !== "") {
+                    // Strip minus if they typed it manually, then wrap in exact quotes
+                    if (cleanChannel.startsWith('-')) cleanChannel = cleanChannel.substring(1).trim();
+                    searchQuery += ' -"' + cleanChannel + '"';
+                }
+            });
+        }
 
         // Determine SP Matrix key using Time + Duration + Sort Order
         const timeVal = document.getElementById('timeframe').value;
