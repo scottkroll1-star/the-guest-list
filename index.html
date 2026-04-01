@@ -15,6 +15,7 @@
             --accent: #ff0000;
             --btn-hover: #cc0000;
             --panel-bg: #1e1e1e;
+            --card-bg: #222222;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -84,6 +85,23 @@
             font-size: 15px;
             flex-grow: 1;
             outline: none;
+            cursor: pointer;
+        }
+        
+        .squelch-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--input-bg);
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        .squelch-label {
+            font-size: 15px;
+            font-weight: 600;
+            white-space: nowrap;
+            color: #ccc;
         }
         
         .master-toggle {
@@ -184,6 +202,45 @@
             height: 20px;
             accent-color: var(--accent);
         }
+
+        /* View Toggling */
+        #setup-view { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        #dashboard-view { display: none; flex-direction: column; gap: 15px; width: 100%; }
+        
+        /* Launch Cards */
+        .launch-card {
+            background-color: var(--card-bg);
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .launch-card:active {
+            background-color: #333;
+        }
+        .card-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .card-icon {
+            font-size: 24px;
+            color: var(--accent);
+        }
+        .back-btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -191,53 +248,85 @@
 <div class="app-container">
     <h1>The Guest List</h1>
 
-    <div class="controls-panel">
-        <div class="row-split">
-            <select id="timeframe" onchange="saveState()">
-                <option value="d">Today</option>
-                <option value="w" selected>This Week</option>
-                <option value="m">This Month</option>
-                <option value="y">This Year</option>
-            </select>
+    <div id="setup-view">
+        <div class="controls-panel">
+            <div class="row-split">
+                <select id="timeframe" onchange="saveState()">
+                    <option value="today">Today</option>
+                    <option value="week" selected>This Week</option>
+                    <option value="month">This Month</option>
+                </select>
+                
+                <select id="sort-order" onchange="saveState()">
+                    <option value="relevance" selected>Sort: Relevance</option>
+                    <option value="popular">Sort: Popularity</option>
+                </select>
+            </div>
+
+            <div class="squelch-container">
+                <div class="squelch-label">Spam Shield:</div>
+                <select id="squelch-level" onchange="saveState()" style="border: none; padding: 4px; background: transparent;">
+                    <option value="lo">Low (Niche)</option>
+                    <option value="med" selected>Med (Standard)</option>
+                    <option value="hi">High (Lockdown)</option>
+                </select>
+            </div>
+
+            <label class="master-toggle">
+                <span class="master-toggle-text">Strict Title Match</span>
+                <input type="checkbox" id="strict-mode" onchange="saveState()" checked>
+            </label>
             
-            <select id="sort-order" onchange="saveState()">
-                <option value="" selected>Sort: Relevance</option>
-                <option value=",sbd:1">Sort: Newest</option>
-            </select>
+            <label class="master-toggle" style="margin-top: -4px;">
+                <span class="master-toggle-text">Long Form (>20 min)</span>
+                <input type="checkbox" id="long-form" onchange="saveState()" checked>
+            </label>
         </div>
 
-        <label class="master-toggle">
-            <span class="master-toggle-text">Strict Title Match</span>
-            <input type="checkbox" id="strict-mode" onchange="saveState()" checked>
-        </label>
-        
-        <label class="master-toggle" style="margin-top: -4px;">
-            <span class="master-toggle-text">Long Form (>20 min)</span>
-            <input type="checkbox" id="long-form" onchange="saveState()" checked>
-        </label>
+        <div id="guest-list">
+            </div>
+        <button class="add-btn" onclick="addGuestRow('')">+ Add Guest</button>
+
+        <details>
+            <summary>Advanced Settings <span>▼</span></summary>
+            <div class="advanced-label">Banned Channels (Comma separated):</div>
+            <textarea id="banned-channels" class="chaos-input" placeholder="e.g., Hope World, Tech Bros" oninput="saveState()"></textarea>
+        </details>
+
+        <button class="search-btn" onclick="generateDashboard()">Generate Feed</button>
     </div>
 
-    <div id="guest-list">
-        </div>
-    <button class="add-btn" onclick="addGuestRow('')">+ Add Guest</button>
+    <div id="dashboard-view">
+        <div id="card-container">
+            </div>
+        <button class="back-btn" onclick="returnToSetup()">← Edit Guest List</button>
+    </div>
 
-    <details>
-        <summary>Advanced Exclusions <span>▼</span></summary>
-        <div class="advanced-label">Custom Chaos Words (Comma separated):</div>
-        <input type="text" id="chaos-filter" class="chaos-input" placeholder="e.g., short, review" oninput="saveState()">
-        
-        <div class="advanced-label">Banned Channels (Comma separated):</div>
-        <textarea id="banned-channels" class="chaos-input" placeholder="e.g., Hope World, Tech Bros" oninput="saveState()"></textarea>
-    </details>
-
-    <button class="search-btn" onclick="executeSearch()">Search Google Video</button>
 </div>
 
 <script>
     const guestListContainer = document.getElementById('guest-list');
+    const setupView = document.getElementById('setup-view');
+    const dashboardView = document.getElementById('dashboard-view');
+    const cardContainer = document.getElementById('card-container');
+
+    const spMatrix = {
+        "today_any_relevance": "EgIIAg%253D%253D",
+        "today_long_relevance": "EgYIAhABGAI%253D",
+        "week_any_relevance": "EgIIAw%253D%253D",
+        "week_long_relevance": "EgYIAxABGAI%253D",
+        "month_any_relevance": "EgIIBA%253D%253D",
+        "month_long_relevance": "EgYIBBABGAI%253D",
+        "today_any_popular": "CAMSBAgCEAE%253D",
+        "today_long_popular": "CAMSBggCEAEYAg%253D%253D",
+        "week_any_popular": "CAMSBAgDEAE%253D",
+        "week_long_popular": "CAMSBggDEAEYAg%253D%253D",
+        "month_any_popular": "CAMSBAgEEAE%253D",
+        "month_long_popular": "CAMSBggEEAEYAg%253D%253D"
+    };
 
     function initApp() {
-        let savedState = JSON.parse(localStorage.getItem('theGuestListGoogleBridgev3'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListDashboard'));
         
         if (!savedState) {
             addGuestRow('');
@@ -249,9 +338,9 @@
             }
             if (savedState.timeframe) document.getElementById('timeframe').value = savedState.timeframe;
             if (savedState.sortOrder) document.getElementById('sort-order').value = savedState.sortOrder;
+            if (savedState.squelchLevel) document.getElementById('squelch-level').value = savedState.squelchLevel;
             document.getElementById('strict-mode').checked = savedState.strictMode !== false;
             document.getElementById('long-form').checked = savedState.longForm !== false;
-            if (savedState.chaos) document.getElementById('chaos-filter').value = savedState.chaos;
             if (savedState.bannedChannels) document.getElementById('banned-channels').value = savedState.bannedChannels;
         }
     }
@@ -265,13 +354,13 @@
             guests: guestArray,
             timeframe: document.getElementById('timeframe').value,
             sortOrder: document.getElementById('sort-order').value,
+            squelchLevel: document.getElementById('squelch-level').value,
             strictMode: document.getElementById('strict-mode').checked,
             longForm: document.getElementById('long-form').checked,
-            chaos: document.getElementById('chaos-filter').value,
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListGoogleBridgev3', JSON.stringify(state));
+        localStorage.setItem('theGuestListDashboard', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -307,61 +396,66 @@
         }
     }
 
-    function executeSearch() {
+    function generateDashboard() {
         const inputs = document.querySelectorAll('.guest-input');
-        const isStrictMode = document.getElementById('strict-mode').checked;
-        const activeQueries = [];
+        const activeNames = [];
         
         inputs.forEach(input => {
             let val = input.value.trim();
             if (val !== "") {
-                if (isStrictMode) {
-                    activeQueries.push(`intitle:"${val}"`);
-                } else {
-                    activeQueries.push(`"${val}"`);
-                }
+                activeNames.push(val);
             }
         });
 
-        if (activeQueries.length === 0) {
-            alert("Please enter at least one name.");
+        if (activeNames.length === 0) {
+            alert("Please enter at least one guest name.");
             return;
         }
 
-        let searchQuery = "site:youtube.com ";
-        searchQuery += activeQueries.length > 1 ? `(${activeQueries.join(' OR ')})` : activeQueries[0];
-
-        // The Master Invisible Shield (Drama, Foreign, Grifters)
-        // Trimmed slightly to keep us far away from Google's 32-word cap.
-        const embeddedChaos = [
-            'reaction', 'reacts', 'owned', 'slam', 'destroyed', 'responds',
-            'libro', 'resumen', 'analyse', 'análisis', 'résumé',
-            'hindi', 'urdu', 'kya', 'kaise', 'telugu',
-            'motivation', 'mindset', 'wealth', 'speech', 'advice'
-        ];
-        
-        const chaosInput = document.getElementById('chaos-filter').value.trim();
-        let allExcludeWords = [...embeddedChaos];
-        
-        if (chaosInput !== "") {
-            const userWords = chaosInput.split(',');
-            allExcludeWords = allExcludeWords.concat(userWords);
-        }
-
-        allExcludeWords.forEach(word => {
-            let cleanWord = word.trim();
-            if (cleanWord !== "") {
-                if (cleanWord.startsWith('-')) cleanWord = cleanWord.substring(1);
-                
-                // THE FIX: Only wrap in quotes if the exclusion is multiple words
-                if (cleanWord.includes(' ')) {
-                    searchQuery += ` -"${cleanWord}"`;
-                } else {
-                    searchQuery += ` -${cleanWord}`;
-                }
-            }
+        // Generate Cards
+        cardContainer.innerHTML = '';
+        activeNames.forEach(name => {
+            const card = document.createElement('div');
+            card.className = 'launch-card';
+            card.innerHTML = `
+                <span class="card-name">${name}</span>
+                <span class="card-icon">▶</span>
+            `;
+            card.onclick = () => launchSearch(name);
+            cardContainer.appendChild(card);
         });
 
+        // Switch Views
+        setupView.style.display = 'none';
+        dashboardView.style.display = 'flex';
+    }
+
+    function returnToSetup() {
+        dashboardView.style.display = 'none';
+        setupView.style.display = 'flex';
+    }
+
+    function launchSearch(guestName) {
+        const isStrictMode = document.getElementById('strict-mode').checked;
+        let searchQuery = isStrictMode ? `intitle:"${guestName}"` : `"${guestName}"`;
+
+        // Spam Shield Logic
+        const squelchLevel = document.getElementById('squelch-level').value;
+        let squelchWords = [];
+
+        if (squelchLevel === 'lo') {
+            squelchWords = ['reaction', 'reacts'];
+        } else if (squelchLevel === 'med') {
+            squelchWords = ['reaction', 'reacts', 'slam', 'destroyed', 'owned', 'responds'];
+        } else if (squelchLevel === 'hi') {
+            squelchWords = ['reaction', 'reacts', 'slam', 'destroyed', 'owned', 'hindi', 'urdu', 'kya', 'kaise', 'resumen', 'motivation', 'mindset'];
+        }
+
+        squelchWords.forEach(word => {
+            searchQuery += ` -${word}`;
+        });
+
+        // Banned Channels
         const bannedInput = document.getElementById('banned-channels').value.trim();
         if (bannedInput !== "") {
             const bannedChannels = bannedInput.split(',');
@@ -369,25 +463,19 @@
                 let cleanChannel = channel.trim();
                 if (cleanChannel !== "") {
                     if (cleanChannel.startsWith('-')) cleanChannel = cleanChannel.substring(1).trim();
-                    searchQuery += ` -"${cleanChannel}"`; // Always quote channels because of spaces
+                    searchQuery += ` -"${cleanChannel}"`;
                 }
             });
         }
 
-        // Google Video URL Construction (tbm=vid)
-        const baseUrl = "https://www.google.com/search?tbm=vid&q=";
+        // SP Parameter
+        const timeVal = document.getElementById('timeframe').value;
+        const lengthVal = document.getElementById('long-form').checked ? "long" : "any";
+        const sortVal = document.getElementById('sort-order').value;
+        const timeframeCode = spMatrix[timeVal + "_" + lengthVal + "_" + sortVal];
         
-        const timeVal = document.getElementById('timeframe').value; // d, w, m, y
-        const isLong = document.getElementById('long-form').checked;
-        const sortOrder = document.getElementById('sort-order').value;
-        
-        let tbsString = `qdr:${timeVal}`;
-        if (isLong) {
-            tbsString += `,dur:l`; // Google's code for >20 mins
-        }
-        tbsString += sortOrder; 
-
-        let finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&tbs=" + tbsString;
+        const baseUrl = "https://www.youtube.com/results?search_query=";
+        let finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&sp=" + timeframeCode + "&hl=en&gl=US";
         
         window.open(finalUrl, '_blank');
     }
