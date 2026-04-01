@@ -14,9 +14,10 @@
             --input-bg: #2a2a2a;
             --accent: #ff0000;
             --btn-hover: #cc0000;
+            --panel-bg: #1e1e1e;
         }
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
@@ -34,56 +35,72 @@
         }
         h1 {
             text-align: center;
-            font-size: 26px;
+            font-size: 28px;
             margin-bottom: 5px;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             text-transform: uppercase;
+            font-weight: 800;
         }
         .search-btn {
             background-color: var(--accent);
             color: white;
             border: none;
-            padding: 15px;
+            padding: 16px;
             font-size: 18px;
             font-weight: bold;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             text-transform: uppercase;
             margin-top: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
-        .search-btn:active { background-color: var(--btn-hover); }
+        .search-btn:active { 
+            background-color: var(--btn-hover); 
+            transform: translateY(2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
         
-        .controls {
+        .controls-panel {
+            background: var(--panel-bg);
+            padding: 16px;
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            background: var(--input-bg);
-            padding: 15px;
-            border-radius: 8px;
             gap: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
-        .controls-row {
+        .row-split {
             display: flex;
-            justify-content: space-between;
-            width: 100%;
-            align-items: center;
             gap: 10px;
-        }
-        .checkbox-group {
-            display: flex;
-            gap: 20px;
             width: 100%;
-            flex-wrap: wrap; 
         }
         select {
-            background: #333;
+            background: var(--input-bg);
             color: white;
-            border: 1px solid #555;
-            padding: 8px;
-            border-radius: 4px;
-            font-size: 14px;
+            border: 1px solid #444;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
             flex-grow: 1;
+            outline: none;
         }
+        
+        /* The simplified master toggle */
+        .master-toggle {
+            background: var(--input-bg);
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .master-toggle-text {
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
         .guest-row {
             display: flex;
             gap: 10px;
@@ -91,65 +108,83 @@
         }
         input[type="text"], textarea {
             flex-grow: 1;
-            padding: 12px;
+            padding: 14px;
             font-size: 16px;
             background-color: var(--input-bg);
             border: 1px solid #444;
             color: white;
             border-radius: 8px;
-            font-family: Arial, sans-serif;
+            outline: none;
+        }
+        input[type="text"]:focus, textarea:focus {
+            border-color: var(--accent);
+        }
+        
+        .delete-btn {
+            background-color: #333;
+            color: #aaa;
+            border: none;
+            width: 48px;
+            height: 48px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .delete-btn:active { background-color: #555; }
+        
+        .add-btn {
+            background-color: transparent;
+            color: #888;
+            border: 2px dashed #444;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .add-btn:active { background-color: #222; }
+        
+        /* Advanced Settings Accordion */
+        details {
+            background: var(--panel-bg);
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+        summary {
+            color: #aaa;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+        }
+        summary::-webkit-details-marker { display: none; }
+        details[open] summary { margin-bottom: 12px; color: white; }
+        
+        .advanced-label {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 4px;
+            margin-top: 10px;
         }
         .chaos-input {
             width: 100%;
             box-sizing: border-box;
             font-size: 14px !important;
-            margin-top: 4px;
+            padding: 10px !important;
         }
-        /* Made the banned channels a text area so you can see a longer list */
         textarea.chaos-input {
             resize: vertical;
             min-height: 60px;
         }
-        .delete-btn {
-            background-color: #444;
-            color: white;
-            border: none;
-            width: 44px;
-            height: 44px;
-            font-size: 18px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        .delete-btn:active { background-color: #666; }
         
-        .add-btn {
-            background-color: transparent;
-            color: #aaa;
-            border: 2px dashed #444;
-            padding: 12px;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-bottom: 5px;
-        }
-        .add-btn:active { background-color: #222; }
-        
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 15px;
-            cursor: pointer;
-        }
+        /* Custom Checkbox CSS */
         input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-        .filter-label {
-            font-size: 14px;
-            color: #ccc;
-            margin-top: 5px;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent);
         }
     </style>
 </head>
@@ -158,10 +193,8 @@
 <div class="app-container">
     <h1>The Guest List</h1>
 
-    <button class="search-btn" onclick="executeSearch()">Search YouTube</button>
-
-    <div class="controls">
-        <div class="controls-row">
+    <div class="controls-panel">
+        <div class="row-split">
             <select id="timeframe" onchange="saveState()">
                 <option value="today">Today</option>
                 <option value="week" selected>This Week</option>
@@ -173,31 +206,30 @@
                 <option value="popular">Sort: Popularity</option>
             </select>
         </div>
+
+        <label class="master-toggle">
+            <span class="master-toggle-text">Strict Interview Mode</span>
+            <input type="checkbox" id="strict-mode" onchange="saveState()" checked>
+        </label>
         
-        <div class="checkbox-group">
-            <label class="checkbox-container">
-                <input type="checkbox" id="long-form" onchange="saveState()"> 
-                > 20 min
-            </label>
-            <label class="checkbox-container">
-                <input type="checkbox" id="title-only" onchange="saveState()"> 
-                Title Only
-            </label>
-        </div>
-        
-        <div style="width: 100%;">
-            <div class="filter-label">Chaos Filter (Add Extra Exclusions):</div>
-            <input type="text" id="chaos-filter" class="chaos-input" placeholder="e.g., stock, review, short" oninput="saveState()">
-            
-            <div class="filter-label">Banned Channels (Comma separated):</div>
-            <textarea id="banned-channels" class="chaos-input" placeholder="e.g., Hope World, AI Motivation" oninput="saveState()"></textarea>
-        </div>
+        <label class="master-toggle" style="margin-top: -4px;">
+            <span class="master-toggle-text">Long Form (>20 min)</span>
+            <input type="checkbox" id="long-form" onchange="saveState()" checked>
+        </label>
     </div>
 
     <div id="guest-list">
         </div>
+    <button class="add-btn" onclick="addGuestRow('')">+ Add Guest</button>
 
-    <button class="add-btn" onclick="addGuestRow('')">+ Add Another Guest</button>
+    <details>
+        <summary>Advanced Exclusions (Tap to Expand) <span>▼</span></summary>
+        <div class="advanced-label">Custom Chaos Words (Comma separated):</div>
+        <input type="text" id="chaos-filter" class="chaos-input" placeholder="e.g., short, review" oninput="saveState()">
+        
+        <div class="advanced-label">Banned Channels (Comma separated):</div>
+        <textarea id="banned-channels" class="chaos-input" placeholder="e.g., Hope World, Tech Bros" oninput="saveState()"></textarea>
+    </details>
 
     <button class="search-btn" onclick="executeSearch()">Search YouTube</button>
 </div>
@@ -205,7 +237,6 @@
 <script>
     const guestListContainer = document.getElementById('guest-list');
 
-    // Expanded YouTube sp Parameter Matrix (Time x Duration x Sort)
     const spMatrix = {
         "today_any_relevance": "EgIIAg%253D%253D",
         "today_long_relevance": "EgYIAhABGAI%253D",
@@ -221,9 +252,8 @@
         "month_long_popular": "CAMSBggEEAEYAg%253D%253D"
     };
 
-    // 1. App Initialization Logic
     function initApp() {
-        let savedState = JSON.parse(localStorage.getItem('theGuestListState'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListOptimized'));
         
         if (!savedState) {
             addGuestRow('');
@@ -235,14 +265,16 @@
             }
             if (savedState.timeframe) document.getElementById('timeframe').value = savedState.timeframe;
             if (savedState.sortOrder) document.getElementById('sort-order').value = savedState.sortOrder;
-            if (savedState.longForm) document.getElementById('long-form').checked = savedState.longForm;
-            if (savedState.titleOnly) document.getElementById('title-only').checked = savedState.titleOnly;
+            
+            // Handle toggles safely, defaulting to true if not set
+            document.getElementById('strict-mode').checked = savedState.strictMode !== false;
+            document.getElementById('long-form').checked = savedState.longForm !== false;
+            
             if (savedState.chaos) document.getElementById('chaos-filter').value = savedState.chaos;
             if (savedState.bannedChannels) document.getElementById('banned-channels').value = savedState.bannedChannels;
         }
     }
 
-    // 2. Universal Save Logic
     function saveState() {
         const inputs = document.querySelectorAll('.guest-input');
         const guestArray = [];
@@ -252,16 +284,15 @@
             guests: guestArray,
             timeframe: document.getElementById('timeframe').value,
             sortOrder: document.getElementById('sort-order').value,
+            strictMode: document.getElementById('strict-mode').checked,
             longForm: document.getElementById('long-form').checked,
-            titleOnly: document.getElementById('title-only').checked,
             chaos: document.getElementById('chaos-filter').value,
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListState', JSON.stringify(state));
+        localStorage.setItem('theGuestListOptimized', JSON.stringify(state));
     }
 
-    // 3. Interface Rendering Logic
     function addGuestRow(value) {
         const row = document.createElement('div');
         row.className = 'guest-row';
@@ -275,7 +306,7 @@
         
         const delBtn = document.createElement('button');
         delBtn.className = 'delete-btn';
-        delBtn.innerHTML = 'X';
+        delBtn.innerHTML = '✕';
         delBtn.onclick = function() {
             row.remove();
             checkSafeguard();
@@ -295,45 +326,37 @@
         }
     }
 
-    // 5. The Search Execution Logic
     function executeSearch() {
         const inputs = document.querySelectorAll('.guest-input');
-        const isTitleOnly = document.getElementById('title-only').checked;
-        const activeNames = [];
+        const isStrictMode = document.getElementById('strict-mode').checked;
+        const activeQueries = [];
         
-        // Compile Guests and Apply intitle: if checked
+        // Zero-Friction Formatting Logic
         inputs.forEach(input => {
-            const val = input.value.trim();
+            let val = input.value.trim();
             if (val !== "") {
-                if (isTitleOnly) {
-                    activeNames.push('intitle:"' + val + '"');
+                if (isStrictMode) {
+                    // Automatically builds the advanced format block
+                    activeQueries.push(`(intitle:"${val}" (podcast OR interview OR episode OR talk OR conversation))`);
                 } else {
-                    activeNames.push('"' + val + '"');
+                    activeQueries.push(`"${val}"`);
                 }
             }
         });
 
-        if (activeNames.length === 0) {
-            alert("Please enter at least one guest name on The Guest List.");
+        if (activeQueries.length === 0) {
+            alert("Please enter at least one name.");
             return;
         }
 
-        let baseNamesQuery = "";
-        if (activeNames.length > 1) {
-            baseNamesQuery = "(" + activeNames.join(' OR ') + ")";
-        } else {
-            baseNamesQuery = activeNames[0];
-        }
+        // Combine multiple guests with OR logic
+        let searchQuery = activeQueries.join(' OR ');
 
-        let searchQuery = baseNamesQuery + " (podcast OR interview OR episode OR talk OR conversation)";
-
-        // Core Word Exclusions
+        // The Master Invisible Shield (Drama, Foreign, Grifters)
         const embeddedChaos = [
             'reaction', 'responds', 'destroyed', 'owned', 'reacts', 'slam',
-            'libro', 'resumen', 'análisis',
-            'livre', 'résumé', 'analyse',
-            'किताब', 'पुस्तक', 'सारांश', 'विश्लेषण',
-            '书', '書', '总结', '總結', '摘要', '分析',
+            'libro', 'resumen', 'análisis', 'livre', 'résumé', 'analyse',
+            'किताब', 'पुस्तक', 'सारांश', 'विश्लेषण', '书', '書', '总结', '總結', '摘要', '分析',
             'motivation', 'motivational', 'mindset', 'wealth', 'speech', 'advice',
             'hindi', 'urdu', 'telugu', 'kya', 'kaise', 'mein', 'aur'
         ];
@@ -354,27 +377,26 @@
             }
         });
 
-        // Exact Match Channel Banning
+        // Banned Channels Logic
         const bannedInput = document.getElementById('banned-channels').value.trim();
         if (bannedInput !== "") {
             const bannedChannels = bannedInput.split(',');
             bannedChannels.forEach(channel => {
                 let cleanChannel = channel.trim();
                 if (cleanChannel !== "") {
-                    // Strip minus if they typed it manually, then wrap in exact quotes
                     if (cleanChannel.startsWith('-')) cleanChannel = cleanChannel.substring(1).trim();
                     searchQuery += ' -"' + cleanChannel + '"';
                 }
             });
         }
 
-        // Determine SP Matrix key using Time + Duration + Sort Order
+        // Generate Final URL Matrix Key
         const timeVal = document.getElementById('timeframe').value;
         const lengthVal = document.getElementById('long-form').checked ? "long" : "any";
         const sortVal = document.getElementById('sort-order').value;
-        
         const timeframeCode = spMatrix[timeVal + "_" + lengthVal + "_" + sortVal];
         
+        // Execution
         const baseUrl = "https://www.youtube.com/results?search_query=";
         let finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&sp=" + timeframeCode + "&hl=en&gl=US";
         
