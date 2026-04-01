@@ -237,7 +237,7 @@
     const guestListContainer = document.getElementById('guest-list');
 
     function initApp() {
-        let savedState = JSON.parse(localStorage.getItem('theGuestListGoogleBridge'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListGoogleBridgev3'));
         
         if (!savedState) {
             addGuestRow('');
@@ -271,7 +271,7 @@
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListGoogleBridge', JSON.stringify(state));
+        localStorage.setItem('theGuestListGoogleBridgev3', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -328,15 +328,15 @@
             return;
         }
 
-        // Restrict to YouTube
         let searchQuery = "site:youtube.com ";
         searchQuery += activeQueries.length > 1 ? `(${activeQueries.join(' OR ')})` : activeQueries[0];
 
-        // Because we are using Google, we can stack the full massive list again without fear of transcript false-negatives.
+        // The Master Invisible Shield (Drama, Foreign, Grifters)
+        // Trimmed slightly to keep us far away from Google's 32-word cap.
         const embeddedChaos = [
             'reaction', 'reacts', 'owned', 'slam', 'destroyed', 'responds',
             'libro', 'resumen', 'analyse', 'análisis', 'résumé',
-            'hindi', 'urdu', 'kya', 'kaise', 'telugu', 'mein', 'aur',
+            'hindi', 'urdu', 'kya', 'kaise', 'telugu',
             'motivation', 'mindset', 'wealth', 'speech', 'advice'
         ];
         
@@ -352,11 +352,16 @@
             let cleanWord = word.trim();
             if (cleanWord !== "") {
                 if (cleanWord.startsWith('-')) cleanWord = cleanWord.substring(1);
-                searchQuery += ` -"${cleanWord}"`;
+                
+                // THE FIX: Only wrap in quotes if the exclusion is multiple words
+                if (cleanWord.includes(' ')) {
+                    searchQuery += ` -"${cleanWord}"`;
+                } else {
+                    searchQuery += ` -${cleanWord}`;
+                }
             }
         });
 
-        // Banned Channels
         const bannedInput = document.getElementById('banned-channels').value.trim();
         if (bannedInput !== "") {
             const bannedChannels = bannedInput.split(',');
@@ -364,7 +369,7 @@
                 let cleanChannel = channel.trim();
                 if (cleanChannel !== "") {
                     if (cleanChannel.startsWith('-')) cleanChannel = cleanChannel.substring(1).trim();
-                    searchQuery += ` -"${cleanChannel}"`;
+                    searchQuery += ` -"${cleanChannel}"`; // Always quote channels because of spaces
                 }
             });
         }
@@ -372,7 +377,6 @@
         // Google Video URL Construction (tbm=vid)
         const baseUrl = "https://www.google.com/search?tbm=vid&q=";
         
-        // Time & Duration String (tbs parameter)
         const timeVal = document.getElementById('timeframe').value; // d, w, m, y
         const isLong = document.getElementById('long-form').checked;
         const sortOrder = document.getElementById('sort-order').value;
@@ -381,7 +385,7 @@
         if (isLong) {
             tbsString += `,dur:l`; // Google's code for >20 mins
         }
-        tbsString += sortOrder; // Appends ,sbd:1 if "Newest" is selected
+        tbsString += sortOrder; 
 
         let finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&tbs=" + tbsString;
         
