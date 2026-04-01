@@ -251,7 +251,7 @@
     };
 
     function initApp() {
-        let savedState = JSON.parse(localStorage.getItem('theGuestListWebFinal'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListWebFinalv2'));
         
         if (!savedState) {
             addGuestRow('');
@@ -285,7 +285,7 @@
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListWebFinal', JSON.stringify(state));
+        localStorage.setItem('theGuestListWebFinalv2', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -345,11 +345,6 @@
 
         let searchQuery = activeQueries.length > 1 ? `(${activeQueries.join(' OR ')})` : activeQueries[0];
 
-        // THE KILLER ALGORITHM: The "PageRank" Proxy for Structural Authority
-        // Forcing YouTube to find the tedious administrative footprint of a real production.
-        const structuralAuthority = ` ("Apple Podcasts" OR "Spotify" OR "0:00" OR "00:00" OR "full episode" OR "Patreon")`;
-        searchQuery += structuralAuthority;
-
         // The Master Invisible Shield (Drama, Foreign, Grifters)
         const embeddedChaos = [
             'reaction', 'responds', 'destroyed', 'owned', 'reacts', 'slam',
@@ -380,10 +375,10 @@
         if (bannedInput !== "") {
             const bannedChannels = bannedInput.split(',');
             bannedChannels.forEach(channel => {
-                let cleanChannel = channel.trim();
-                if (cleanChannel !== "") {
-                    if (cleanChannel.startsWith('-')) cleanChannel = cleanChannel.substring(1).trim();
-                    searchQuery += ` -"${cleanChannel}"`;
+                let channelText = channel.trim();
+                if (channelText !== "") {
+                    if (channelText.startsWith('-')) channelText = channelText.substring(1).trim();
+                    searchQuery += ` -"${channelText}"`;
                 }
             });
         }
