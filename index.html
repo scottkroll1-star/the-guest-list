@@ -9,20 +9,20 @@
     
     <style>
         :root {
-            --bg-color: #121212;
+            --bg-color: #0a0a0a;
             --text-color: #ffffff;
-            --input-bg: #2a2a2a;
+            --input-bg: #1e1e1e;
             --accent: #ff0000;
             --btn-hover: #cc0000;
-            --panel-bg: #1e1e1e;
-            --card-bg: #222222;
+            --panel-bg: #141414;
+            --card-bg: #1f1f1f;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 24px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -32,60 +32,62 @@
             max-width: 450px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 18px;
         }
         h1 {
             text-align: center;
-            font-size: 28px;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
+            font-size: 32px;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            font-weight: 800;
+            font-weight: 900;
         }
         .search-btn {
             background-color: var(--accent);
             color: white;
             border: none;
-            padding: 16px;
+            padding: 18px;
             font-size: 18px;
-            font-weight: bold;
-            border-radius: 12px;
+            font-weight: 800;
+            border-radius: 14px;
             cursor: pointer;
             text-transform: uppercase;
-            margin-top: 5px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            margin-top: 8px;
+            box-shadow: 0 4px 12px rgba(255,0,0,0.2);
             width: 100%;
+            transition: all 0.2s ease;
         }
         .search-btn:active { 
             background-color: var(--btn-hover); 
             transform: translateY(2px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 6px rgba(255,0,0,0.2);
         }
         
         .controls-panel {
             background: var(--panel-bg);
-            padding: 16px;
-            border-radius: 12px;
+            padding: 20px;
+            border-radius: 16px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            gap: 14px;
+            border: 1px solid #2a2a2a;
         }
         .row-split {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             width: 100%;
         }
         select {
             background: var(--input-bg);
             color: white;
-            border: 1px solid #444;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 15px;
+            border: 1px solid #333;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
             flex-grow: 1;
             outline: none;
             cursor: pointer;
+            font-weight: 500;
         }
         
         .squelch-container {
@@ -93,154 +95,143 @@
             align-items: center;
             gap: 10px;
             background: var(--input-bg);
-            padding: 10px 12px;
-            border-radius: 8px;
-            border: 1px solid #444;
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid #333;
         }
         .squelch-label {
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
             white-space: nowrap;
-            color: #ccc;
-        }
-        
-        .master-toggle {
-            background: var(--input-bg);
-            padding: 12px 16px;
-            border-radius: 8px;
-            border: 1px solid #444;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-        .master-toggle-text {
-            font-size: 15px;
-            font-weight: 600;
+            color: #e0e0e0;
         }
         
         .guest-row {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
         }
         input[type="text"], textarea {
             flex-grow: 1;
-            padding: 14px;
-            font-size: 16px;
+            padding: 16px;
+            font-size: 18px;
             background-color: var(--input-bg);
-            border: 1px solid #444;
+            border: 1px solid #333;
             color: white;
-            border-radius: 8px;
+            border-radius: 12px;
             outline: none;
+            font-weight: 500;
         }
         input[type="text"]:focus, textarea:focus {
             border-color: var(--accent);
+            background-color: #252525;
         }
         
         .delete-btn {
-            background-color: #333;
-            color: #aaa;
-            border: none;
-            width: 48px;
-            height: 48px;
-            font-size: 18px;
-            border-radius: 8px;
+            background-color: #2a2a2a;
+            color: #888;
+            border: 1px solid #333;
+            width: 54px;
+            height: 54px;
+            font-size: 20px;
+            border-radius: 12px;
             cursor: pointer;
+            transition: all 0.2s;
         }
-        .delete-btn:active { background-color: #555; }
+        .delete-btn:active { background-color: #444; color: white; }
         
         .add-btn {
             background-color: transparent;
-            color: #888;
-            border: 2px dashed #444;
-            padding: 14px;
+            color: #666;
+            border: 2px dashed #333;
+            padding: 16px;
             font-size: 16px;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
+            transition: all 0.2s;
         }
-        .add-btn:active { background-color: #222; }
+        .add-btn:active { background-color: #1a1a1a; color: #888; border-color: #444; }
         
         details {
             background: var(--panel-bg);
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid #333;
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid #2a2a2a;
         }
         summary {
-            color: #aaa;
-            font-size: 14px;
-            font-weight: bold;
+            color: #888;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
             list-style: none;
             display: flex;
             justify-content: space-between;
         }
         summary::-webkit-details-marker { display: none; }
-        details[open] summary { margin-bottom: 12px; color: white; }
+        details[open] summary { margin-bottom: 14px; color: white; }
         
         .advanced-label {
-            font-size: 13px;
-            color: #888;
-            margin-bottom: 4px;
-            margin-top: 10px;
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 6px;
+            margin-top: 12px;
+            font-weight: 600;
         }
         .chaos-input {
             width: 100%;
             box-sizing: border-box;
-            font-size: 14px !important;
-            padding: 10px !important;
+            font-size: 15px !important;
+            padding: 12px !important;
         }
         textarea.chaos-input {
             resize: vertical;
-            min-height: 60px;
-        }
-        
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: var(--accent);
+            min-height: 80px;
         }
 
         /* View Toggling */
-        #setup-view { display: flex; flex-direction: column; gap: 15px; width: 100%; }
-        #dashboard-view { display: none; flex-direction: column; gap: 15px; width: 100%; }
+        #setup-view { display: flex; flex-direction: column; gap: 18px; width: 100%; }
+        #dashboard-view { display: none; flex-direction: column; gap: 18px; width: 100%; }
         
         /* Launch Cards */
         .launch-card {
             background-color: var(--card-bg);
-            border: 1px solid #444;
-            border-radius: 12px;
-            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 24px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            transition: background-color 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            margin-bottom: 12px;
         }
         .launch-card:active {
-            background-color: #333;
+            background-color: #2a2a2a;
+            transform: scale(0.98);
         }
         .card-name {
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
         }
         .card-icon {
             font-size: 24px;
             color: var(--accent);
         }
         .back-btn {
-            background-color: #333;
-            color: white;
-            border: none;
-            padding: 12px;
+            background-color: #222;
+            color: #aaa;
+            border: 1px solid #333;
+            padding: 16px;
             font-size: 16px;
-            border-radius: 8px;
+            font-weight: 700;
+            border-radius: 12px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 12px;
         }
+        .back-btn:active { background-color: #333; color: white; }
     </style>
 </head>
 <body>
@@ -265,27 +256,17 @@
 
             <div class="squelch-container">
                 <div class="squelch-label">Spam Shield:</div>
-                <select id="squelch-level" onchange="saveState()" style="border: none; padding: 4px; background: transparent;">
+                <select id="squelch-level" onchange="saveState()" style="border: none; padding: 4px; background: transparent; font-size: 16px;">
                     <option value="lo">Low (Niche)</option>
                     <option value="med" selected>Med (Standard)</option>
                     <option value="hi">High (Lockdown)</option>
                 </select>
             </div>
-
-            <label class="master-toggle">
-                <span class="master-toggle-text">Strict Title Match</span>
-                <input type="checkbox" id="strict-mode" onchange="saveState()" checked>
-            </label>
-            
-            <label class="master-toggle" style="margin-top: -4px;">
-                <span class="master-toggle-text">Long Form (>20 min)</span>
-                <input type="checkbox" id="long-form" onchange="saveState()" checked>
-            </label>
         </div>
 
         <div id="guest-list">
             </div>
-        <button class="add-btn" onclick="addGuestRow('')">+ Add Guest</button>
+        <button class="add-btn" onclick="addGuestRow('')">+ Add Target</button>
 
         <details>
             <summary>Advanced Settings <span>▼</span></summary>
@@ -293,13 +274,13 @@
             <textarea id="banned-channels" class="chaos-input" placeholder="e.g., Hope World, Tech Bros" oninput="saveState()"></textarea>
         </details>
 
-        <button class="search-btn" onclick="generateDashboard()">Generate Feed</button>
+        <button class="search-btn" onclick="generateDashboard()">Initialize Feed</button>
     </div>
 
     <div id="dashboard-view">
         <div id="card-container">
             </div>
-        <button class="back-btn" onclick="returnToSetup()">← Edit Guest List</button>
+        <button class="back-btn" onclick="returnToSetup()">← Reconfigure Targets</button>
     </div>
 
 </div>
@@ -311,22 +292,16 @@
     const cardContainer = document.getElementById('card-container');
 
     const spMatrix = {
-        "today_any_relevance": "EgIIAg%253D%253D",
         "today_long_relevance": "EgYIAhABGAI%253D",
-        "week_any_relevance": "EgIIAw%253D%253D",
         "week_long_relevance": "EgYIAxABGAI%253D",
-        "month_any_relevance": "EgIIBA%253D%253D",
         "month_long_relevance": "EgYIBBABGAI%253D",
-        "today_any_popular": "CAMSBAgCEAE%253D",
         "today_long_popular": "CAMSBggCEAEYAg%253D%253D",
-        "week_any_popular": "CAMSBAgDEAE%253D",
         "week_long_popular": "CAMSBggDEAEYAg%253D%253D",
-        "month_any_popular": "CAMSBAgEEAE%253D",
         "month_long_popular": "CAMSBggEEAEYAg%253D%253D"
     };
 
     function initApp() {
-        let savedState = JSON.parse(localStorage.getItem('theGuestListDashboard'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListNativeFinalv2'));
         
         if (!savedState) {
             addGuestRow('');
@@ -339,8 +314,6 @@
             if (savedState.timeframe) document.getElementById('timeframe').value = savedState.timeframe;
             if (savedState.sortOrder) document.getElementById('sort-order').value = savedState.sortOrder;
             if (savedState.squelchLevel) document.getElementById('squelch-level').value = savedState.squelchLevel;
-            document.getElementById('strict-mode').checked = savedState.strictMode !== false;
-            document.getElementById('long-form').checked = savedState.longForm !== false;
             if (savedState.bannedChannels) document.getElementById('banned-channels').value = savedState.bannedChannels;
         }
     }
@@ -355,12 +328,10 @@
             timeframe: document.getElementById('timeframe').value,
             sortOrder: document.getElementById('sort-order').value,
             squelchLevel: document.getElementById('squelch-level').value,
-            strictMode: document.getElementById('strict-mode').checked,
-            longForm: document.getElementById('long-form').checked,
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListDashboard', JSON.stringify(state));
+        localStorage.setItem('theGuestListNativeFinalv2', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -370,7 +341,7 @@
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'guest-input';
-        input.placeholder = 'Enter guest name...';
+        input.placeholder = 'Enter target name...';
         input.value = value;
         input.addEventListener('input', saveState);
         
@@ -408,11 +379,10 @@
         });
 
         if (activeNames.length === 0) {
-            alert("Please enter at least one guest name.");
+            alert("Error: Minimum of one target name required.");
             return;
         }
 
-        // Generate Cards
         cardContainer.innerHTML = '';
         activeNames.forEach(name => {
             const card = document.createElement('div');
@@ -425,7 +395,6 @@
             cardContainer.appendChild(card);
         });
 
-        // Switch Views
         setupView.style.display = 'none';
         dashboardView.style.display = 'flex';
     }
@@ -436,10 +405,9 @@
     }
 
     function launchSearch(guestName) {
-        const isStrictMode = document.getElementById('strict-mode').checked;
-        let searchQuery = isStrictMode ? `intitle:"${guestName}"` : `"${guestName}"`;
+        // BUG FIX: Removed 'intitle:' to prevent YouTube mobile app crash. Standard quotes used.
+        let searchQuery = `"${guestName}"`;
 
-        // Spam Shield Logic
         const squelchLevel = document.getElementById('squelch-level').value;
         let squelchWords = [];
 
@@ -455,7 +423,6 @@
             searchQuery += ` -${word}`;
         });
 
-        // Banned Channels
         const bannedInput = document.getElementById('banned-channels').value.trim();
         if (bannedInput !== "") {
             const bannedChannels = bannedInput.split(',');
@@ -468,11 +435,10 @@
             });
         }
 
-        // SP Parameter
         const timeVal = document.getElementById('timeframe').value;
-        const lengthVal = document.getElementById('long-form').checked ? "long" : "any";
         const sortVal = document.getElementById('sort-order').value;
-        const timeframeCode = spMatrix[timeVal + "_" + lengthVal + "_" + sortVal];
+        
+        const timeframeCode = spMatrix[timeVal + "_long_" + sortVal];
         
         const baseUrl = "https://www.youtube.com/results?search_query=";
         let finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&sp=" + timeframeCode + "&hl=en&gl=US";
