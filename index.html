@@ -292,16 +292,26 @@
             return;
         }
 
-        let searchQuery = activeNames.join(' OR ');
+        // Bracket the guest names to ensure logical grouping before adding the format requirement
+        let baseNamesQuery = "";
+        if (activeNames.length > 1) {
+            baseNamesQuery = "(" + activeNames.join(' OR ') + ")";
+        } else {
+            baseNamesQuery = activeNames[0];
+        }
 
-        // Apply Embedded Anti-Drama, Multilingual & Anti-Grifter Shield + User Chaos Filter
+        // The Double Lock Part 1: Mandatory Format Anchor
+        let searchQuery = baseNamesQuery + " (podcast OR interview OR episode OR talk OR conversation)";
+
+        // The Double Lock Part 2: Embedded Anti-Drama, Multilingual, Anti-Grifter & Hinglish Shield
         const embeddedChaos = [
             'reaction', 'responds', 'destroyed', 'owned', 'reacts', 'slam',
             'libro', 'resumen', 'análisis',
             'livre', 'résumé', 'analyse',
             'किताब', 'पुस्तक', 'सारांश', 'विश्लेषण',
             '书', '書', '总结', '總結', '摘要', '分析',
-            'motivation', 'motivational', 'mindset', 'wealth', 'speech', 'advice'
+            'motivation', 'motivational', 'mindset', 'wealth', 'speech', 'advice',
+            'hindi', 'urdu', 'telugu', 'kya', 'kaise', 'mein', 'aur'
         ];
         
         const chaosInput = document.getElementById('chaos-filter').value.trim();
