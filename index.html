@@ -216,10 +216,29 @@
             font-weight: 800;
             letter-spacing: 0.5px;
         }
+        
+        /* Added Action Container for Play Arrow and GO text */
+        .card-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
         .card-icon {
             font-size: 24px;
             color: var(--accent);
+            line-height: 1;
         }
+        .card-go {
+            font-size: 12px;
+            font-weight: 800;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
         .back-btn {
             background-color: #222;
             color: #aaa;
@@ -280,7 +299,7 @@
     <div id="dashboard-view">
         <div id="card-container">
             </div>
-        <button class="back-btn" onclick="returnToSetup()">← Reconfigure Targets</button>
+        <button class="back-btn" onclick="returnToSetup()">← Back</button>
     </div>
 
 </div>
@@ -301,7 +320,7 @@
     };
 
     function initApp() {
-        let savedState = JSON.parse(localStorage.getItem('theGuestListNativeFinalv2'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListFinalUI'));
         
         if (!savedState) {
             addGuestRow('');
@@ -331,7 +350,7 @@
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListNativeFinalv2', JSON.stringify(state));
+        localStorage.setItem('theGuestListFinalUI', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -387,9 +406,13 @@
         activeNames.forEach(name => {
             const card = document.createElement('div');
             card.className = 'launch-card';
+            // Adjusted HTML to include the GO text under the play button
             card.innerHTML = `
                 <span class="card-name">${name}</span>
-                <span class="card-icon">▶</span>
+                <div class="card-action">
+                    <span class="card-icon">▶</span>
+                    <span class="card-go">GO</span>
+                </div>
             `;
             card.onclick = () => launchSearch(name);
             cardContainer.appendChild(card);
@@ -405,7 +428,6 @@
     }
 
     function launchSearch(guestName) {
-        // BUG FIX: Removed 'intitle:' to prevent YouTube mobile app crash. Standard quotes used.
         let searchQuery = `"${guestName}"`;
 
         const squelchLevel = document.getElementById('squelch-level').value;
