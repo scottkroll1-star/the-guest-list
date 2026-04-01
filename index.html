@@ -194,14 +194,15 @@
     <div class="controls-panel">
         <div class="row-split">
             <select id="timeframe" onchange="saveState()">
-                <option value="today">Today</option>
-                <option value="week" selected>This Week</option>
-                <option value="month">This Month</option>
+                <option value="d">Today</option>
+                <option value="w" selected>This Week</option>
+                <option value="m">This Month</option>
+                <option value="y">This Year</option>
             </select>
             
             <select id="sort-order" onchange="saveState()">
-                <option value="relevance" selected>Sort: Relevance</option>
-                <option value="popular">Sort: Popularity</option>
+                <option value="" selected>Sort: Relevance</option>
+                <option value=",sbd:1">Sort: Newest</option>
             </select>
         </div>
 
@@ -229,29 +230,14 @@
         <textarea id="banned-channels" class="chaos-input" placeholder="e.g., Hope World, Tech Bros" oninput="saveState()"></textarea>
     </details>
 
-    <button class="search-btn" onclick="executeSearch()">Search YouTube</button>
+    <button class="search-btn" onclick="executeSearch()">Search Google Video</button>
 </div>
 
 <script>
     const guestListContainer = document.getElementById('guest-list');
 
-    const spMatrix = {
-        "today_any_relevance": "EgIIAg%253D%253D",
-        "today_long_relevance": "EgYIAhABGAI%253D",
-        "week_any_relevance": "EgIIAw%253D%253D",
-        "week_long_relevance": "EgYIAxABGAI%253D",
-        "month_any_relevance": "EgIIBA%253D%253D",
-        "month_long_relevance": "EgYIBBABGAI%253D",
-        "today_any_popular": "CAMSBAgCEAE%253D",
-        "today_long_popular": "CAMSBggCEAEYAg%253D%253D",
-        "week_any_popular": "CAMSBAgDEAE%253D",
-        "week_long_popular": "CAMSBggDEAEYAg%253D%253D",
-        "month_any_popular": "CAMSBAgEEAE%253D",
-        "month_long_popular": "CAMSBggEEAEYAg%253D%253D"
-    };
-
     function initApp() {
-        let savedState = JSON.parse(localStorage.getItem('theGuestListTrimmed'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListGoogleBridge'));
         
         if (!savedState) {
             addGuestRow('');
@@ -285,7 +271,7 @@
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListTrimmed', JSON.stringify(state));
+        localStorage.setItem('theGuestListGoogleBridge', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -342,14 +328,16 @@
             return;
         }
 
-        let searchQuery = activeQueries.length > 1 ? `(${activeQueries.join(' OR ')})` : activeQueries[0];
+        // Restrict to YouTube
+        let searchQuery = "site:youtube.com ";
+        searchQuery += activeQueries.length > 1 ? `(${activeQueries.join(' OR ')})` : activeQueries[0];
 
-        // The Condensed, High-Yield Shield (Max 14 words to avoid breaking YouTube Search)
+        // Because we are using Google, we can stack the full massive list again without fear of transcript false-negatives.
         const embeddedChaos = [
-            'reaction', 'reacts', 'owned', 'slam', 
-            'libro', 'resumen', 'analyse', 
-            'hindi', 'urdu', 'kya', 'kaise', 
-            'motivation', 'mindset', 'wealth'
+            'reaction', 'reacts', 'owned', 'slam', 'destroyed', 'responds',
+            'libro', 'resumen', 'analyse', 'análisis', 'résumé',
+            'hindi', 'urdu', 'kya', 'kaise', 'telugu', 'mein', 'aur',
+            'motivation', 'mindset', 'wealth', 'speech', 'advice'
         ];
         
         const chaosInput = document.getElementById('chaos-filter').value.trim();
@@ -368,6 +356,7 @@
             }
         });
 
+        // Banned Channels
         const bannedInput = document.getElementById('banned-channels').value.trim();
         if (bannedInput !== "") {
             const bannedChannels = bannedInput.split(',');
@@ -380,14 +369,21 @@
             });
         }
 
-        const timeVal = document.getElementById('timeframe').value;
-        const lengthVal = document.getElementById('long-form').checked ? "long" : "any";
-        const sortVal = document.getElementById('sort-order').value;
+        // Google Video URL Construction (tbm=vid)
+        const baseUrl = "https://www.google.com/search?tbm=vid&q=";
         
-        const timeframeCode = spMatrix[timeVal + "_" + lengthVal + "_" + sortVal];
+        // Time & Duration String (tbs parameter)
+        const timeVal = document.getElementById('timeframe').value; // d, w, m, y
+        const isLong = document.getElementById('long-form').checked;
+        const sortOrder = document.getElementById('sort-order').value;
         
-        const baseUrl = "https://www.youtube.com/results?search_query=";
-        let finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&sp=" + timeframeCode + "&hl=en&gl=US";
+        let tbsString = `qdr:${timeVal}`;
+        if (isLong) {
+            tbsString += `,dur:l`; // Google's code for >20 mins
+        }
+        tbsString += sortOrder; // Appends ,sbd:1 if "Newest" is selected
+
+        let finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&tbs=" + tbsString;
         
         window.open(finalUrl, '_blank');
     }
