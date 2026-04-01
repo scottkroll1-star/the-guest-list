@@ -251,7 +251,7 @@
     };
 
     function initApp() {
-        let savedState = JSON.parse(localStorage.getItem('theGuestListWebFinalv2'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListTrimmed'));
         
         if (!savedState) {
             addGuestRow('');
@@ -285,7 +285,7 @@
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListWebFinalv2', JSON.stringify(state));
+        localStorage.setItem('theGuestListTrimmed', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -326,7 +326,6 @@
         const isStrictMode = document.getElementById('strict-mode').checked;
         const activeQueries = [];
         
-        // Base Name Query Construction
         inputs.forEach(input => {
             let val = input.value.trim();
             if (val !== "") {
@@ -345,13 +344,12 @@
 
         let searchQuery = activeQueries.length > 1 ? `(${activeQueries.join(' OR ')})` : activeQueries[0];
 
-        // The Master Invisible Shield (Drama, Foreign, Grifters)
+        // The Condensed, High-Yield Shield (Max 14 words to avoid breaking YouTube Search)
         const embeddedChaos = [
-            'reaction', 'responds', 'destroyed', 'owned', 'reacts', 'slam',
-            'libro', 'resumen', 'análisis', 'livre', 'résumé', 'analyse',
-            'किताब', 'पुस्तक', 'सारांश', 'विश्लेषण', '书', '書', '总结', '總結', '摘要', '分析',
-            'motivation', 'motivational', 'mindset', 'wealth', 'speech', 'advice',
-            'hindi', 'urdu', 'telugu', 'kya', 'kaise', 'mein', 'aur'
+            'reaction', 'reacts', 'owned', 'slam', 
+            'libro', 'resumen', 'analyse', 
+            'hindi', 'urdu', 'kya', 'kaise', 
+            'motivation', 'mindset', 'wealth'
         ];
         
         const chaosInput = document.getElementById('chaos-filter').value.trim();
@@ -370,20 +368,18 @@
             }
         });
 
-        // Exact Match Channel Banning
         const bannedInput = document.getElementById('banned-channels').value.trim();
         if (bannedInput !== "") {
             const bannedChannels = bannedInput.split(',');
             bannedChannels.forEach(channel => {
-                let channelText = channel.trim();
-                if (channelText !== "") {
-                    if (channelText.startsWith('-')) channelText = channelText.substring(1).trim();
-                    searchQuery += ` -"${channelText}"`;
+                let cleanChannel = channel.trim();
+                if (cleanChannel !== "") {
+                    if (cleanChannel.startsWith('-')) cleanChannel = cleanChannel.substring(1).trim();
+                    searchQuery += ` -"${cleanChannel}"`;
                 }
             });
         }
 
-        // URL Generation Logic
         const timeVal = document.getElementById('timeframe').value;
         const lengthVal = document.getElementById('long-form').checked ? "long" : "any";
         const sortVal = document.getElementById('sort-order').value;
