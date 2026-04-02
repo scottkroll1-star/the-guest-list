@@ -433,7 +433,7 @@
             history.replaceState(null, null, window.location.pathname);
         }
 
-        let savedState = JSON.parse(localStorage.getItem('theGuestListV17'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListV18'));
         
         if (!savedState) {
             addGuestRow('');
@@ -463,7 +463,7 @@
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListV17', JSON.stringify(state));
+        localStorage.setItem('theGuestListV18', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -557,7 +557,7 @@
         } else if (squelchLevel === 'med') {
             squelchWords = ['reaction', 'reacts', 'slam', 'destroyed', 'owned', 'responds'];
         } else if (squelchLevel === 'hi') {
-            squelchWords = ['reaction', 'reacts', 'slam', 'destroyed', 'owned', 'hindi', 'urdu', 'kya', 'kaise', 'resumen', 'motivation', 'mindset'];
+            squelchWords = ['reaction', 'reacts', 'slam', 'destroyed', 'owned', 'hindi', 'urdu', 'kya', 'kaise', 'resumen', 'motivation', 'mindset', 'uno', 'una'];
         }
 
         squelchWords.forEach(word => {
