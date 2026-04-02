@@ -37,15 +37,24 @@
         h1 {
             text-align: center;
             font-size: 34px;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: 900;
-            color: white;
+            color: #ffffff;
+        }
+        .tagline {
+            text-align: center;
+            font-size: 15px;
+            color: #888;
+            margin-top: -4px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         .search-btn {
             background-color: var(--accent);
-            color: white;
+            color: #ffffff;
             border: none;
             padding: 20px;
             font-size: 20px;
@@ -80,7 +89,7 @@
         }
         select {
             background: var(--input-bg);
-            color: white;
+            color: #ffffff;
             border: 1px solid #333;
             padding: 16px;
             border-radius: 10px;
@@ -104,7 +113,7 @@
             font-size: 18px;
             font-weight: 800;
             white-space: nowrap;
-            color: white;
+            color: #ffffff;
         }
         
         .guest-row {
@@ -118,7 +127,7 @@
             font-size: 20px;
             background-color: var(--input-bg);
             border: 1px solid #333;
-            color: white;
+            color: #ffffff;
             border-radius: 12px;
             outline: none;
             font-weight: 600;
@@ -133,7 +142,7 @@
         
         .delete-btn {
             background-color: #2a2a2a;
-            color: white;
+            color: #ffffff;
             border: 1px solid #333;
             width: 60px;
             height: 60px;
@@ -146,8 +155,8 @@
         
         .add-btn {
             background-color: transparent;
-            color: white;
-            border: 2px dashed #444;
+            color: #ffffff;
+            border: 2px dashed #555;
             padding: 18px;
             font-size: 18px;
             border-radius: 14px;
@@ -155,7 +164,7 @@
             font-weight: 800;
             transition: all 0.2s;
         }
-        .add-btn:active { background-color: #1a1a1a; border-color: #666; }
+        .add-btn:active { background-color: #1a1a1a; border-color: #888; }
         
         details {
             background: var(--panel-bg);
@@ -164,7 +173,7 @@
             border: 1px solid #2a2a2a;
         }
         summary {
-            color: white;
+            color: #ffffff;
             font-size: 18px;
             font-weight: 800;
             cursor: pointer;
@@ -177,7 +186,7 @@
         
         .advanced-label {
             font-size: 16px;
-            color: white;
+            color: #ffffff;
             margin-bottom: 8px;
             margin-top: 14px;
             font-weight: 700;
@@ -193,11 +202,9 @@
             min-height: 90px;
         }
 
-        /* View Toggling */
         #setup-view { display: flex; flex-direction: column; gap: 20px; width: 100%; }
         #dashboard-view { display: none; flex-direction: column; gap: 20px; width: 100%; }
         
-        /* Launch Cards */
         .launch-card {
             background-color: var(--card-bg);
             border: 1px solid #333;
@@ -219,7 +226,7 @@
             font-size: 24px;
             font-weight: 800;
             letter-spacing: 0.5px;
-            color: white;
+            color: #ffffff;
         }
         
         .card-action {
@@ -237,7 +244,7 @@
         .card-go {
             font-size: 14px;
             font-weight: 900;
-            color: white;
+            color: #ffffff;
             text-transform: uppercase;
             letter-spacing: 1px;
             line-height: 1;
@@ -245,7 +252,7 @@
 
         .back-btn {
             background-color: #222;
-            color: white;
+            color: #ffffff;
             border: 1px solid #444;
             padding: 18px;
             font-size: 18px;
@@ -261,6 +268,7 @@
 
 <div class="app-container">
     <h1>The Guest List</h1>
+    <p class="tagline">The most efficient way to monitor multiple guests at once.</p>
 
     <div id="setup-view">
         <div class="controls-panel">
@@ -323,11 +331,22 @@
         "month_long_popular": "CAMSBggEEAEYAg%253D%253D"
     };
 
-    function initApp() {
-        // Initialize History API state to prevent null errors on first back swipe
-        history.replaceState({ view: 'setup' }, '');
+    window.addEventListener('hashchange', () => {
+        if (window.location.hash === '#dashboard') {
+            setupView.style.display = 'none';
+            dashboardView.style.display = 'flex';
+        } else {
+            dashboardView.style.display = 'none';
+            setupView.style.display = 'flex';
+        }
+    });
 
-        let savedState = JSON.parse(localStorage.getItem('theGuestListV10'));
+    function initApp() {
+        if (window.location.hash === '#dashboard') {
+            history.replaceState(null, null, window.location.pathname);
+        }
+
+        let savedState = JSON.parse(localStorage.getItem('theGuestListV13'));
         
         if (!savedState) {
             addGuestRow('');
@@ -344,17 +363,6 @@
         }
     }
 
-    // Android/Browser Hardware Back Button Intercept
-    window.addEventListener('popstate', (event) => {
-        if (event.state && event.state.view === 'dashboard') {
-            setupView.style.display = 'none';
-            dashboardView.style.display = 'flex';
-        } else {
-            dashboardView.style.display = 'none';
-            setupView.style.display = 'flex';
-        }
-    });
-
     function saveState() {
         const inputs = document.querySelectorAll('.guest-input');
         const guestArray = [];
@@ -368,7 +376,7 @@
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListV10', JSON.stringify(state));
+        localStorage.setItem('theGuestListV13', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -435,16 +443,11 @@
             cardContainer.appendChild(card);
         });
 
-        // Push state for the hardware back button logic
-        history.pushState({ view: 'dashboard' }, '', '#dashboard');
-
-        setupView.style.display = 'none';
-        dashboardView.style.display = 'flex';
+        window.location.hash = 'dashboard';
     }
 
     function returnToSetupViaButton() {
-        // Triggers the popstate event naturally instead of hard-coding the display swap
-        history.back();
+        history.back(); 
     }
 
     function launchSearch(guestName) {
