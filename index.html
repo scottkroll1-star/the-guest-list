@@ -32,22 +32,23 @@
             max-width: 450px;
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 20px;
         }
         h1 {
             text-align: center;
-            font-size: 32px;
+            font-size: 34px;
             margin-bottom: 8px;
             letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: 900;
+            color: white;
         }
         .search-btn {
             background-color: var(--accent);
             color: white;
             border: none;
-            padding: 18px;
-            font-size: 18px;
+            padding: 20px;
+            font-size: 20px;
             font-weight: 800;
             border-radius: 14px;
             cursor: pointer;
@@ -69,7 +70,7 @@
             border-radius: 16px;
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 16px;
             border: 1px solid #2a2a2a;
         }
         .row-split {
@@ -81,13 +82,13 @@
             background: var(--input-bg);
             color: white;
             border: 1px solid #333;
-            padding: 14px;
+            padding: 16px;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 18px;
             flex-grow: 1;
             outline: none;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
         }
         
         .squelch-container {
@@ -95,15 +96,15 @@
             align-items: center;
             gap: 10px;
             background: var(--input-bg);
-            padding: 8px 14px;
+            padding: 10px 16px;
             border-radius: 10px;
             border: 1px solid #333;
         }
         .squelch-label {
-            font-size: 16px;
-            font-weight: 700;
+            font-size: 18px;
+            font-weight: 800;
             white-space: nowrap;
-            color: #e0e0e0;
+            color: white;
         }
         
         .guest-row {
@@ -113,14 +114,17 @@
         }
         input[type="text"], textarea {
             flex-grow: 1;
-            padding: 16px;
-            font-size: 18px;
+            padding: 18px;
+            font-size: 20px;
             background-color: var(--input-bg);
             border: 1px solid #333;
             color: white;
             border-radius: 12px;
             outline: none;
-            font-weight: 500;
+            font-weight: 600;
+        }
+        input[type="text"]::placeholder, textarea::placeholder {
+            color: #888;
         }
         input[type="text"]:focus, textarea:focus {
             border-color: var(--accent);
@@ -129,95 +133,95 @@
         
         .delete-btn {
             background-color: #2a2a2a;
-            color: #888;
+            color: white;
             border: 1px solid #333;
-            width: 54px;
-            height: 54px;
-            font-size: 20px;
+            width: 60px;
+            height: 60px;
+            font-size: 22px;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .delete-btn:active { background-color: #444; color: white; }
+        .delete-btn:active { background-color: #444; }
         
         .add-btn {
             background-color: transparent;
-            color: #666;
-            border: 2px dashed #333;
-            padding: 16px;
-            font-size: 16px;
+            color: white;
+            border: 2px dashed #444;
+            padding: 18px;
+            font-size: 18px;
             border-radius: 14px;
             cursor: pointer;
-            font-weight: 700;
+            font-weight: 800;
             transition: all 0.2s;
         }
-        .add-btn:active { background-color: #1a1a1a; color: #888; border-color: #444; }
+        .add-btn:active { background-color: #1a1a1a; border-color: #666; }
         
         details {
             background: var(--panel-bg);
-            padding: 16px;
+            padding: 18px;
             border-radius: 14px;
             border: 1px solid #2a2a2a;
         }
         summary {
-            color: #888;
-            font-size: 15px;
-            font-weight: 700;
+            color: white;
+            font-size: 18px;
+            font-weight: 800;
             cursor: pointer;
             list-style: none;
             display: flex;
             justify-content: space-between;
         }
         summary::-webkit-details-marker { display: none; }
-        details[open] summary { margin-bottom: 14px; color: white; }
+        details[open] summary { margin-bottom: 16px; }
         
         .advanced-label {
-            font-size: 14px;
-            color: #aaa;
-            margin-bottom: 6px;
-            margin-top: 12px;
-            font-weight: 600;
+            font-size: 16px;
+            color: white;
+            margin-bottom: 8px;
+            margin-top: 14px;
+            font-weight: 700;
         }
         .chaos-input {
             width: 100%;
             box-sizing: border-box;
-            font-size: 15px !important;
-            padding: 12px !important;
+            font-size: 18px !important;
+            padding: 14px !important;
         }
         textarea.chaos-input {
             resize: vertical;
-            min-height: 80px;
+            min-height: 90px;
         }
 
         /* View Toggling */
-        #setup-view { display: flex; flex-direction: column; gap: 18px; width: 100%; }
-        #dashboard-view { display: none; flex-direction: column; gap: 18px; width: 100%; }
+        #setup-view { display: flex; flex-direction: column; gap: 20px; width: 100%; }
+        #dashboard-view { display: none; flex-direction: column; gap: 20px; width: 100%; }
         
         /* Launch Cards */
         .launch-card {
             background-color: var(--card-bg);
             border: 1px solid #333;
             border-radius: 16px;
-            padding: 24px 20px;
+            padding: 26px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
             transition: background-color 0.2s, transform 0.1s;
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
         .launch-card:active {
             background-color: #2a2a2a;
             transform: scale(0.98);
         }
         .card-name {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 800;
             letter-spacing: 0.5px;
+            color: white;
         }
         
-        /* Added Action Container for Play Arrow and GO text */
         .card-action {
             display: flex;
             flex-direction: column;
@@ -226,14 +230,14 @@
             gap: 4px;
         }
         .card-icon {
-            font-size: 24px;
+            font-size: 28px;
             color: var(--accent);
             line-height: 1;
         }
         .card-go {
-            font-size: 12px;
-            font-weight: 800;
-            color: #777;
+            font-size: 14px;
+            font-weight: 900;
+            color: white;
             text-transform: uppercase;
             letter-spacing: 1px;
             line-height: 1;
@@ -241,16 +245,16 @@
 
         .back-btn {
             background-color: #222;
-            color: #aaa;
-            border: 1px solid #333;
-            padding: 16px;
-            font-size: 16px;
-            font-weight: 700;
+            color: white;
+            border: 1px solid #444;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: 800;
             border-radius: 12px;
             cursor: pointer;
-            margin-top: 12px;
+            margin-top: 14px;
         }
-        .back-btn:active { background-color: #333; color: white; }
+        .back-btn:active { background-color: #333; }
     </style>
 </head>
 <body>
@@ -275,7 +279,7 @@
 
             <div class="squelch-container">
                 <div class="squelch-label">Spam Shield:</div>
-                <select id="squelch-level" onchange="saveState()" style="border: none; padding: 4px; background: transparent; font-size: 16px;">
+                <select id="squelch-level" onchange="saveState()" style="border: none; padding: 4px; background: transparent; font-size: 18px;">
                     <option value="lo">Low (Niche)</option>
                     <option value="med" selected>Med (Standard)</option>
                     <option value="hi">High (Lockdown)</option>
@@ -299,7 +303,7 @@
     <div id="dashboard-view">
         <div id="card-container">
             </div>
-        <button class="back-btn" onclick="returnToSetup()">← Back</button>
+        <button class="back-btn" onclick="returnToSetupViaButton()">← Back</button>
     </div>
 
 </div>
@@ -320,7 +324,10 @@
     };
 
     function initApp() {
-        let savedState = JSON.parse(localStorage.getItem('theGuestListFinalUI'));
+        // Initialize History API state to prevent null errors on first back swipe
+        history.replaceState({ view: 'setup' }, '');
+
+        let savedState = JSON.parse(localStorage.getItem('theGuestListV10'));
         
         if (!savedState) {
             addGuestRow('');
@@ -337,6 +344,17 @@
         }
     }
 
+    // Android/Browser Hardware Back Button Intercept
+    window.addEventListener('popstate', (event) => {
+        if (event.state && event.state.view === 'dashboard') {
+            setupView.style.display = 'none';
+            dashboardView.style.display = 'flex';
+        } else {
+            dashboardView.style.display = 'none';
+            setupView.style.display = 'flex';
+        }
+    });
+
     function saveState() {
         const inputs = document.querySelectorAll('.guest-input');
         const guestArray = [];
@@ -350,7 +368,7 @@
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListFinalUI', JSON.stringify(state));
+        localStorage.setItem('theGuestListV10', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -406,7 +424,6 @@
         activeNames.forEach(name => {
             const card = document.createElement('div');
             card.className = 'launch-card';
-            // Adjusted HTML to include the GO text under the play button
             card.innerHTML = `
                 <span class="card-name">${name}</span>
                 <div class="card-action">
@@ -418,13 +435,16 @@
             cardContainer.appendChild(card);
         });
 
+        // Push state for the hardware back button logic
+        history.pushState({ view: 'dashboard' }, '', '#dashboard');
+
         setupView.style.display = 'none';
         dashboardView.style.display = 'flex';
     }
 
-    function returnToSetup() {
-        dashboardView.style.display = 'none';
-        setupView.style.display = 'flex';
+    function returnToSetupViaButton() {
+        // Triggers the popstate event naturally instead of hard-coding the display swap
+        history.back();
     }
 
     function launchSearch(guestName) {
