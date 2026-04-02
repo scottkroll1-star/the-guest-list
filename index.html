@@ -2,520 +2,304 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Guest List</title>
-    
-    <link rel="manifest" href="manifest.json">
-    
     <style>
-        :root {
-            --bg-color: #000000;
-            --text-color: #ffffff;
-            --sub-text: #8e8e93;
-            --pill-bg: #1c1c1e;
-            --accent-red: #ff3b30;
-            --accent-gold: #d4af37;
+        /* Typography Initialization */
+        @font-face {
+            font-family: 'Studio54';
+            /* NOTE: Ensure 'fiftyfour.ttf' is hosted locally in your project folder */
+            src: url('fiftyfour.ttf') format('truetype');
         }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: #050505;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 24px 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
+
         .app-container {
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 15px;
         }
-        
-        /* THE GATSBY HERO ELEMENT */
-        h1 {
+
+        .header-title {
+            font-family: 'Studio54', cursive, sans-serif;
+            font-size: 3.5rem;
             text-align: center;
-            font-family: 'Didot', 'Bodoni MT', 'Times New Roman', serif;
-            font-size: 30px;
-            margin-bottom: 0px;
-            margin-top: 10px;
-            letter-spacing: 5px;
-            text-transform: uppercase;
+            margin: 10px 0;
             font-weight: normal;
-            color: var(--accent-gold);
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
+
         .tagline {
             text-align: center;
-            font-size: 13px;
-            color: var(--text-color);
-            margin-top: 0px;
-            margin-bottom: 8px;
-            font-weight: 500;
-            letter-spacing: 0.2px;
-        }
-
-        /* JONY IVE MINIMALISM */
-        .control-row {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-        select {
-            background: var(--pill-bg);
-            color: var(--text-color);
-            border: none;
-            padding: 14px 4px;
-            border-radius: 14px;
-            font-size: 14px;
+            font-size: 0.85rem;
             font-weight: 600;
-            flex: 1;
-            outline: none;
-            cursor: pointer;
-            text-align: center;
-            text-align-last: center;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            transition: opacity 0.2s;
-        }
-        select:active { opacity: 0.7; }
-
-        .guest-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            width: 100%;
-        }
-        input[type="text"], textarea {
-            flex-grow: 1;
-            padding: 16px 20px;
-            font-size: 16px;
-            background-color: var(--pill-bg);
-            border: none;
-            color: var(--text-color);
-            border-radius: 16px;
-            outline: none;
-            font-weight: 500;
-            box-sizing: border-box;
-            transition: background-color 0.2s;
-        }
-        input[type="text"]::placeholder, textarea::placeholder { color: var(--sub-text); }
-        input[type="text"]:focus, textarea:focus { background-color: #2c2c2e; }
-        
-        .delete-btn {
-            background-color: var(--pill-bg);
-            color: var(--sub-text);
-            border: none;
-            width: 52px;
-            height: 52px;
-            font-size: 20px;
-            border-radius: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        .delete-btn:active { background-color: #2c2c2e; color: #fff; }
-
-        .utility-row {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            padding: 0 10px;
-            box-sizing: border-box;
-        }
-        .utility-btn {
-            background: none;
-            border: none;
-            color: var(--sub-text);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 8px 0;
-            transition: color 0.2s;
-        }
-        .utility-btn:active { color: #fff; }
-
-        #settings-block {
-            display: none;
-            width: 100%;
-            animation: fadeIn 0.2s ease-in-out;
-        }
-        textarea.chaos-input {
-            width: 100%;
-            min-height: 70px;
-            resize: none;
-            font-size: 14px;
+            margin-bottom: 20px;
+            color: #eeeeee;
         }
 
-        .search-btn {
-            background-color: var(--accent-red);
-            color: #ffffff;
-            border: none;
-            padding: 18px;
-            font-size: 16px;
-            font-weight: 700;
-            border-radius: 24px;
-            cursor: pointer;
-            letter-spacing: 1px;
-            margin-top: 4px;
-            box-shadow: 0 4px 14px rgba(255, 59, 48, 0.3);
-            width: 100%;
-            transition: transform 0.1s, opacity 0.2s;
-        }
-        .search-btn:active { 
-            transform: scale(0.98);
-            opacity: 0.9;
-        }
-
-        /* VIEW TOGGLING */
-        #setup-view { display: flex; flex-direction: column; gap: 16px; width: 100%; }
-        #dashboard-view { display: none; flex-direction: column; gap: 16px; width: 100%; }
-        #instructions-view { display: none; flex-direction: column; gap: 16px; width: 100%; }
-
-        /* LAUNCH CARDS */
-        .launch-card {
-            background-color: var(--pill-bg);
-            border: none;
-            border-radius: 18px;
-            padding: 24px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: transform 0.1s, background-color 0.2s;
-            margin-bottom: 8px;
-        }
-        .launch-card:active {
-            background-color: #2c2c2e;
-            transform: scale(0.98);
-        }
-        .card-name {
-            font-size: 20px;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 0.3px;
-        }
-        .card-action {
+        .panel {
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 2px;
-        }
-        .card-icon {
-            font-size: 20px;
-            color: var(--accent-red);
-            line-height: 1;
-        }
-        .card-go {
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--sub-text);
-            letter-spacing: 0.5px;
+            gap: 12px;
         }
 
-        .back-btn {
-            background-color: var(--pill-bg);
-            color: #ffffff;
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+
+        select, input[type="text"], textarea, .btn-secondary {
+            background-color: #2a2a2a;
+            color: white;
             border: none;
-            padding: 16px;
-            font-size: 15px;
-            font-weight: 600;
-            border-radius: 20px;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.9rem;
+            outline: none;
+            font-weight: 500;
+        }
+
+        select {
+            flex: 1;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 10px auto;
+            padding-right: 30px;
             cursor: pointer;
-            margin-top: 8px;
-            transition: background-color 0.2s;
         }
-        .back-btn:active { background-color: #2c2c2e; }
 
-        .instruction-block {
-            background: var(--pill-bg);
-            padding: 24px;
-            border-radius: 18px;
-            color: #ffffff;
+        .guest-entry {
+            flex-direction: row;
+            align-items: center;
+            background-color: #1a1a1a;
+            padding: 10px;
         }
-        .instruction-block h2 {
-            margin-top: 0;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--accent-red);
-            margin-bottom: 16px;
-        }
-        .instruction-block p {
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 16px;
-            color: #d1d1d6;
-        }
-        .instruction-block strong { color: #ffffff; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
+        .guest-entry input {
+            flex: 1;
+            background-color: transparent;
+            padding: 5px;
+            font-size: 1rem;
+            font-weight: 600;
         }
+
+        .clear-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0 10px;
+        }
+
+        .add-guest-btn {
+            background-color: transparent;
+            color: white;
+            border: 1px dashed #555;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        /* Reconfigured Control Module */
+        .stacked-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            box-sizing: border-box;
+            padding: 15px;
+        }
+
+        .btn-secondary.center-text {
+            text-transform: uppercase;
+            justify-content: center;
+        }
+
+        .advanced-settings-container {
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            padding: 15px;
+            display: none; /* Offline by default */
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .advanced-settings-container label {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: monospace;
+            color: #aaa;
+        }
+
+        .initialize-btn {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 18px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            letter-spacing: 1px;
+            margin-top: 5px;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        /* Modal Architecture */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 350px;
+            width: 90%;
+            border: 1px solid #333;
+        }
+
+        .modal-content h2 { 
+            margin-top: 0; 
+            text-transform: uppercase;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .modal-content p { font-size: 0.9rem; line-height: 1.5; color: #ccc; }
+        
+        .modal-btn {
+            background-color: #2a2a2a;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <h1>The Guest List</h1>
-    <p class="tagline">The most efficient way to monitor multiple guests at once.</p>
+    <h1 class="header-title">The Guest List</h1>
+    <div class="tagline">The most efficient way to monitor multiple guests at once.</div>
 
-    <div id="setup-view">
+    <div class="panel">
+        <div class="row">
+            <select>
+                <option>This Month</option>
+                <option>This Week</option>
+                <option>Today</option>
+            </select>
+            <select>
+                <option>Sort: Relevance</option>
+                <option>Sort: Date</option>
+                <option>Sort: Views</option>
+            </select>
+        </div>
+        <select>
+            <option>Spam Shield: High (Lockdown)</option>
+            <option>Spam Shield: Medium</option>
+            <option>Spam Shield: Off</option>
+        </select>
+    </div>
+
+    <div class="panel guest-entry">
+        <input type="text" value="Warren Buffett" placeholder="Enter Guest Name">
+        <button class="clear-btn" onclick="this.previousElementSibling.value=''">✕</button>
+    </div>
+
+    <button class="add-guest-btn">+ Add Guest</button>
+
+    <div class="stacked-controls">
+        <button class="btn-secondary" onclick="toggleAdvanced()">
+            Advanced Settings <span id="adv-arrow">▼</span>
+        </button>
         
-        <div class="control-row">
-            <select id="timeframe" onchange="saveState()">
-                <option value="today">Today</option>
-                <option value="week" selected>Week</option>
-                <option value="month">Month</option>
-            </select>
-            
-            <select id="sort-order" onchange="saveState()">
-                <option value="relevance" selected>Relevant</option>
-                <option value="popular">Popular</option>
-            </select>
-
-            <select id="squelch-level" onchange="saveState()">
-                <option value="lo">Shield: Lo</option>
-                <option value="med" selected>Shield: Med</option>
-                <option value="hi">Shield: Hi</option>
-            </select>
+        <div class="advanced-settings-container" id="advanced-panel">
+            <label>Banned Channels (Comma separated):</label>
+            <textarea placeholder="e.g., Hope World, Tech Bros"></textarea>
         </div>
 
-        <div id="guest-list">
-            </div>
-
-        <div class="utility-row">
-            <button class="utility-btn" onclick="addGuestRow()">+ Add Guest</button>
-            <button class="utility-btn" onclick="toggleSettings()">⚙️ Banned Channels</button>
-            <button class="utility-btn" onclick="openInstructions()">? How to Use</button>
-        </div>
-
-        <div id="settings-block">
-            <textarea id="banned-channels" class="chaos-input" placeholder="Enter channel names to block (e.g., Hope World, Tech Bros)" oninput="saveState()"></textarea>
-        </div>
-
-        <button class="search-btn" onclick="generateDashboard()">Initialize Feed</button>
+        <button class="btn-secondary center-text" onclick="document.getElementById('howto-modal').style.display='flex'">
+            HOW TO USE
+        </button>
     </div>
 
-    <div id="dashboard-view">
-        <div id="card-container">
-            </div>
-        <button class="back-btn" onclick="returnViaButton()">← Back</button>
-    </div>
+    <button class="initialize-btn">INITIALIZE FEED</button>
+</div>
 
-    <div id="instructions-view">
-        <div class="instruction-block">
-            <h2>Operator Manual</h2>
-            <p><strong>1. Add Guests:</strong> Enter the names of the experts or personalities you wish to monitor.</p>
-            <p><strong>2. Engage Shield:</strong> Your defense against the algorithm.<br>
-            • <strong>Lo:</strong> For niche experts. Minimal filtering.<br>
-            • <strong>Med:</strong> Default. Blocks standard reaction clips.<br>
-            • <strong>Hi:</strong> Lockdown. Blocks foreign translations, AI summaries, and grifter networks for highly spammed guests.</p>
-            <p><strong>3. The Dashboard:</strong> Tap any Guest Card to launch a perfectly filtered YouTube query. Swipe back when finished to select the next guest.</p>
-        </div>
-        <button class="back-btn" onclick="returnViaButton()">← Back</button>
+<div id="howto-modal" class="modal">
+    <div class="modal-content">
+        <h2>HOW TO USE</h2>
+        <p>1. Input the specific Guest Name required for tracking.</p>
+        <p>2. Calibrate chronological, sorting, and structural Spam Shield parameters.</p>
+        <p>3. Deploy Advanced Settings to filter specific noise/channels.</p>
+        <p>4. Execute INITIALIZE FEED to query the server.</p>
+        <button class="modal-btn" onclick="document.getElementById('howto-modal').style.display='none'">BACK</button>
     </div>
-
 </div>
 
 <script>
-    const guestListContainer = document.getElementById('guest-list');
-    const setupView = document.getElementById('setup-view');
-    const dashboardView = document.getElementById('dashboard-view');
-    const instructionsView = document.getElementById('instructions-view');
-    const cardContainer = document.getElementById('card-container');
-    const settingsBlock = document.getElementById('settings-block');
-
-    const spMatrix = {
-        "today_long_relevance": "EgYIAhABGAI%253D",
-        "week_long_relevance": "EgYIAxABGAI%253D",
-        "month_long_relevance": "EgYIBBABGAI%253D",
-        "today_long_popular": "CAMSBggCEAEYAg%253D%253D",
-        "week_long_popular": "CAMSBggDEAEYAg%253D%253D",
-        "month_long_popular": "CAMSBggEEAEYAg%253D%253D"
-    };
-
-    window.addEventListener('hashchange', () => {
-        setupView.style.display = 'none';
-        dashboardView.style.display = 'none';
-        instructionsView.style.display = 'none';
-
-        if (window.location.hash === '#dashboard') {
-            dashboardView.style.display = 'flex';
-        } else if (window.location.hash === '#instructions') {
-            instructionsView.style.display = 'flex';
+    // Logic protocol for Advanced Settings toggle
+    function toggleAdvanced() {
+        const panel = document.getElementById('advanced-panel');
+        const arrow = document.getElementById('adv-arrow');
+        if (panel.style.display === 'flex') {
+            panel.style.display = 'none';
+            arrow.textContent = '▼';
         } else {
-            setupView.style.display = 'flex';
-        }
-    });
-
-    function initApp() {
-        if (window.location.hash) {
-            history.replaceState(null, null, window.location.pathname);
-        }
-
-        let savedState = JSON.parse(localStorage.getItem('theGuestListIveUI'));
-        
-        if (!savedState) {
-            addGuestRow('');
-        } else {
-            if (savedState.guests && savedState.guests.length > 0) {
-                savedState.guests.forEach(guest => addGuestRow(guest));
-            } else {
-                addGuestRow('');
-            }
-            if (savedState.timeframe) document.getElementById('timeframe').value = savedState.timeframe;
-            if (savedState.sortOrder) document.getElementById('sort-order').value = savedState.sortOrder;
-            if (savedState.squelchLevel) document.getElementById('squelch-level').value = savedState.squelchLevel;
-            if (savedState.bannedChannels) document.getElementById('banned-channels').value = savedState.bannedChannels;
+            panel.style.display = 'flex';
+            arrow.textContent = '▲';
         }
     }
-
-    function saveState() {
-        const inputs = document.querySelectorAll('.guest-input');
-        const guestArray = [];
-        inputs.forEach(input => guestArray.push(input.value));
-        
-        const state = {
-            guests: guestArray,
-            timeframe: document.getElementById('timeframe').value,
-            sortOrder: document.getElementById('sort-order').value,
-            squelchLevel: document.getElementById('squelch-level').value,
-            bannedChannels: document.getElementById('banned-channels').value
-        };
-        
-        localStorage.setItem('theGuestListIveUI', JSON.stringify(state));
-    }
-
-    function addGuestRow(value) {
-        const row = document.createElement('div');
-        row.className = 'guest-row';
-        
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'guest-input';
-        input.placeholder = 'Enter guest name...';
-        input.value = value;
-        input.addEventListener('input', saveState);
-        
-        const delBtn = document.createElement('button');
-        delBtn.className = 'delete-btn';
-        delBtn.innerHTML = '✕';
-        delBtn.onclick = function() {
-            row.remove();
-            checkSafeguard();
-            saveState();
-        };
-
-        row.appendChild(input);
-        row.appendChild(delBtn);
-        guestListContainer.appendChild(row);
-        saveState();
-    }
-
-    function checkSafeguard() {
-        const rows = document.querySelectorAll('.guest-row');
-        if (rows.length === 0) {
-            addGuestRow('');
-        }
-    }
-
-    function toggleSettings() {
-        if (settingsBlock.style.display === 'none' || settingsBlock.style.display === '') {
-            settingsBlock.style.display = 'block';
-        } else {
-            settingsBlock.style.display = 'none';
-        }
-    }
-
-    function generateDashboard() {
-        const inputs = document.querySelectorAll('.guest-input');
-        const activeNames = [];
-        
-        inputs.forEach(input => {
-            let val = input.value.trim();
-            if (val !== "") {
-                activeNames.push(val);
-            }
-        });
-
-        if (activeNames.length === 0) {
-            alert("Error: Minimum of one guest name required.");
-            return;
-        }
-
-        cardContainer.innerHTML = '';
-        activeNames.forEach(name => {
-            const card = document.createElement('div');
-            card.className = 'launch-card';
-            card.innerHTML = `
-                <span class="card-name">${name}</span>
-                <div class="card-action">
-                    <span class="card-icon">▶</span>
-                    <span class="card-go">GO</span>
-                </div>
-            `;
-            card.onclick = () => launchSearch(name);
-            cardContainer.appendChild(card);
-        });
-
-        window.location.hash = 'dashboard';
-    }
-
-    function openInstructions() {
-        window.location.hash = 'instructions';
-    }
-
-    function returnViaButton() {
-        history.back(); 
-    }
-
-    function launchSearch(guestName) {
-        let searchQuery = `"${guestName}"`;
-
-        const squelchLevel = document.getElementById('squelch-level').value;
-        let squelchWords = [];
-
-        if (squelchLevel === 'lo') {
-            squelchWords = ['reaction', 'reacts'];
-        } else if (squelchLevel === 'med') {
-            squelchWords = ['reaction', 'reacts', 'slam', 'destroyed', 'owned', 'responds'];
-        } else if (squelchLevel === 'hi') {
-            squelchWords = ['reaction', 'reacts', 'slam', 'destroyed', 'owned', 'hindi', 'urdu', 'kya', 'kaise', 'resumen', 'motivation', 'mindset'];
-        }
-
-        squelchWords.forEach(word => {
-            searchQuery += ` -${word}`;
-        });
-
-        const bannedInput = document.getElementById('banned-channels').value.trim();
-        if (bannedInput !== "") {
-            const bannedChannels = bannedInput.split(',');
-            bannedChannels.forEach(channel => {
-                let cleanChannel = channel.trim();
-                if (cleanChannel !== "") {
-                    if (cleanChannel.startsWith('-')) cleanChannel = cleanChannel.substring(1).trim();
-                    searchQuery += ` -"${cleanChannel}"`;
-                }
-            });
-        }
-
-        const timeVal = document.getElementById('timeframe').value;
-        const sortVal = document.getElementById('sort-order').value;
-        
-        const timeframeCode = spMatrix[timeVal + "_long_" + sortVal];
-        
-        const baseUrl = "https://www.youtube.com/results?search_query=";
-        let finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&sp=" + timeframeCode + "&hl=en&gl=US";
-        
-        window.open(finalUrl, '_blank');
-    }
-
-    initApp();
 </script>
 
 </body>
