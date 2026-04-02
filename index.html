@@ -10,12 +10,13 @@
     <style>
         :root {
             --bg-color: #000000;
-            --text-color: #ffffff;
-            --input-bg: #1c1c1e;
-            --accent: #ff0000;
-            --btn-hover: #cc0000;
-            --panel-bg: #121212;
-            --card-bg: #1c1c1e;
+            --text-color: #fcfaf2;
+            --input-bg: #0a1f1f;
+            --accent-gold: #d4af37;
+            --accent-ruby: #9b111e;
+            --ruby-hover: #7a0d18;
+            --panel-bg: #051010;
+            --card-bg: #0a1f1f;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -36,51 +37,58 @@
         }
         h1 {
             text-align: center;
-            font-size: 34px;
-            margin-bottom: 4px;
-            letter-spacing: 2px;
+            font-family: 'Georgia', serif;
+            font-size: 38px;
+            margin-bottom: 2px;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            font-weight: 900;
-            color: #ffffff;
+            font-weight: normal;
+            color: var(--accent-gold);
+            border-bottom: 1px solid var(--accent-gold);
+            padding-bottom: 10px;
         }
         .tagline {
             text-align: center;
-            font-size: 15px;
-            color: #ffffff;
-            margin-top: -4px;
-            margin-bottom: 12px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            color: var(--text-color);
+            margin-top: 4px;
+            margin-bottom: 16px;
+            font-style: italic;
+            letter-spacing: 1px;
         }
         .search-btn {
-            background-color: var(--accent);
-            color: #ffffff;
-            border: none;
+            background-color: var(--accent-ruby);
+            color: var(--accent-gold);
+            border: 2px solid var(--accent-gold);
             padding: 20px;
+            font-family: 'Georgia', serif;
             font-size: 20px;
-            font-weight: 800;
-            border-radius: 14px;
+            font-weight: bold;
+            border-radius: 2px;
             cursor: pointer;
             text-transform: uppercase;
+            letter-spacing: 2px;
             margin-top: 8px;
-            box-shadow: 0 4px 16px rgba(255,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(155, 17, 30, 0.4);
             width: 100%;
             transition: all 0.2s ease;
         }
         .search-btn:active { 
-            background-color: var(--btn-hover); 
+            background-color: var(--ruby-hover); 
             transform: translateY(2px);
-            box-shadow: 0 2px 8px rgba(255,0,0,0.3);
+            box-shadow: 0 2px 6px rgba(155, 17, 30, 0.4);
         }
         
         .controls-panel {
             background: var(--panel-bg);
             padding: 20px;
-            border-radius: 16px;
+            border-radius: 2px;
             display: flex;
             flex-direction: column;
             gap: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            border: 1px solid var(--accent-gold);
+            box-shadow: inset 0 0 0 2px var(--panel-bg), inset 0 0 0 3px var(--accent-gold);
         }
         .row-split {
             display: flex;
@@ -89,19 +97,22 @@
         }
         select {
             background: var(--input-bg);
-            color: #ffffff;
-            border: 2px solid transparent;
+            color: var(--text-color);
+            border: 1px solid var(--accent-gold);
             padding: 16px;
-            border-radius: 12px;
-            font-size: 18px;
+            border-radius: 2px;
+            font-size: 16px;
             flex-grow: 1;
             outline: none;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: normal;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: all 0.2s ease;
         }
         select:focus {
-            background-color: #252528;
+            background-color: #0f2e2e;
         }
         
         .squelch-container {
@@ -110,14 +121,16 @@
             gap: 10px;
             background: var(--input-bg);
             padding: 10px 16px;
-            border-radius: 12px;
-            border: 2px solid transparent;
+            border-radius: 2px;
+            border: 1px solid var(--accent-gold);
         }
         .squelch-label {
-            font-size: 18px;
-            font-weight: 800;
+            font-size: 16px;
+            font-weight: bold;
             white-space: nowrap;
-            color: #ffffff;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .guest-row {
@@ -128,87 +141,90 @@
         input[type="text"], textarea {
             flex-grow: 1;
             padding: 18px;
-            font-size: 20px;
+            font-size: 18px;
             background-color: var(--input-bg);
-            border: 2px solid transparent;
-            color: #ffffff;
-            border-radius: 14px;
+            border: 1px solid var(--accent-gold);
+            color: var(--text-color);
+            border-radius: 2px;
             outline: none;
-            font-weight: 600;
+            font-weight: normal;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             transition: all 0.2s ease;
         }
         input[type="text"]::placeholder, textarea::placeholder {
-            color: #888;
+            color: #778888;
+            font-style: italic;
         }
         input[type="text"]:focus, textarea:focus {
-            border-color: var(--accent);
-            background-color: #252528;
+            background-color: #0f2e2e;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
         }
         
         .delete-btn {
-            background-color: #252528;
-            color: #ffffff;
-            border: none;
+            background-color: var(--input-bg);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
             width: 60px;
             height: 60px;
             font-size: 22px;
-            border-radius: 14px;
+            border-radius: 2px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        .delete-btn:active { background-color: #3a3a3c; }
+        .delete-btn:active { background-color: var(--panel-bg); }
         
         .add-btn {
             background-color: transparent;
-            color: #ffffff;
-            border: 2px dashed #444;
+            color: var(--accent-gold);
+            border: 1px dashed var(--accent-gold);
             padding: 18px;
-            font-size: 18px;
-            border-radius: 14px;
+            font-size: 16px;
+            border-radius: 2px;
             cursor: pointer;
-            font-weight: 800;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             transition: all 0.2s ease;
         }
-        .add-btn:active { background-color: #1a1a1c; border-color: #666; }
-        
-        .advanced-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
-        }
+        .add-btn:active { background-color: var(--input-bg); }
 
         details {
             background: var(--panel-bg);
             padding: 18px;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-            flex-grow: 1;
+            border-radius: 2px;
+            border: 1px solid var(--accent-gold);
+            width: 100%;
+            box-sizing: border-box;
         }
         summary {
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: 800;
+            color: var(--accent-gold);
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
             list-style: none;
             display: flex;
             justify-content: space-between;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         summary::-webkit-details-marker { display: none; }
-        details[open] summary { margin-bottom: 16px; }
+        details[open] summary { margin-bottom: 16px; border-bottom: 1px solid #334444; padding-bottom: 12px; }
         
         .advanced-label {
-            font-size: 16px;
-            color: #ffffff;
+            font-size: 14px;
+            color: var(--text-color);
             margin-bottom: 8px;
-            margin-top: 14px;
-            font-weight: 700;
+            margin-top: 10px;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .chaos-input {
             width: 100%;
             box-sizing: border-box;
-            font-size: 18px !important;
+            font-size: 16px !important;
             padding: 14px !important;
+            background-color: var(--input-bg);
         }
         textarea.chaos-input {
             resize: vertical;
@@ -216,19 +232,21 @@
         }
 
         .help-btn {
-            background-color: #252528;
-            color: #ffffff;
-            border: none;
+            background-color: var(--input-bg);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
             padding: 18px;
             font-size: 16px;
-            font-weight: 800;
-            border-radius: 14px;
+            font-weight: bold;
+            border-radius: 2px;
             cursor: pointer;
             transition: all 0.2s ease;
-            white-space: nowrap;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 4px;
         }
-        .help-btn:active { background-color: #3a3a3c; transform: translateY(2px); }
+        .help-btn:active { background-color: var(--panel-bg); transform: translateY(2px); }
 
         /* View Toggling */
         #setup-view { display: flex; flex-direction: column; gap: 20px; width: 100%; }
@@ -238,27 +256,27 @@
         /* Launch Cards */
         .launch-card {
             background-color: var(--card-bg);
-            border: none;
-            border-top: 1px solid rgba(255,255,255,0.05); /* Simulates 3D depth on true black */
-            border-radius: 16px;
+            border: 1px solid var(--accent-gold);
+            border-radius: 2px;
             padding: 26px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.1s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); /* Deep premium shadow */
+            box-shadow: inset 0 0 0 2px var(--card-bg), inset 0 0 0 3px rgba(212, 175, 55, 0.5);
             margin-bottom: 16px;
         }
         .launch-card:active {
-            background-color: #252528;
+            background-color: #0f2e2e;
             transform: scale(0.98);
         }
         .card-name {
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            color: #ffffff;
+            font-family: 'Georgia', serif;
+            font-size: 26px;
+            font-weight: normal;
+            letter-spacing: 1px;
+            color: var(--text-color);
         }
         
         .card-action {
@@ -270,58 +288,66 @@
         }
         .card-icon {
             font-size: 28px;
-            color: var(--accent);
+            color: var(--accent-gold);
             line-height: 1;
         }
         .card-go {
-            font-size: 14px;
-            font-weight: 900;
-            color: #ffffff;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--accent-gold);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             line-height: 1;
         }
 
         .back-btn {
-            background-color: #252528;
-            color: #ffffff;
-            border: none;
+            background-color: var(--input-bg);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
             padding: 18px;
-            font-size: 18px;
-            font-weight: 800;
-            border-radius: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 2px;
             cursor: pointer;
             margin-top: 8px;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
-        .back-btn:active { background-color: #3a3a3c; transform: translateY(2px); }
+        .back-btn:active { background-color: var(--panel-bg); transform: translateY(2px); }
 
         .instruction-block {
             background: var(--panel-bg);
             padding: 24px;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-            color: #ffffff;
+            border-radius: 2px;
+            border: 1px solid var(--accent-gold);
+            color: var(--text-color);
+            box-shadow: inset 0 0 0 2px var(--panel-bg), inset 0 0 0 3px var(--accent-gold);
         }
         .instruction-block h2 {
             margin-top: 0;
-            font-size: 22px;
-            font-weight: 900;
+            font-family: 'Georgia', serif;
+            font-size: 24px;
+            font-weight: normal;
             text-transform: uppercase;
-            border-bottom: 2px solid #2a2a2a;
+            letter-spacing: 2px;
+            color: var(--accent-gold);
+            border-bottom: 1px solid var(--accent-gold);
             padding-bottom: 12px;
             margin-bottom: 18px;
         }
         .instruction-block p {
-            font-size: 16px;
-            line-height: 1.6;
+            font-size: 15px;
+            line-height: 1.7;
             margin-bottom: 16px;
-            color: #e0e0e0;
+            color: #d0e0e0;
         }
         .instruction-block strong {
-            color: #ffffff;
-            font-weight: 800;
+            color: var(--accent-gold);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
         }
     </style>
 </head>
@@ -348,7 +374,7 @@
 
             <div class="squelch-container">
                 <div class="squelch-label">Spam Shield:</div>
-                <select id="squelch-level" onchange="saveState()" style="border: none; padding: 4px; background: transparent; font-size: 18px;">
+                <select id="squelch-level" onchange="saveState()" style="border: none; padding: 4px; background: transparent; font-size: 16px;">
                     <option value="lo">Low (Niche)</option>
                     <option value="med" selected>Med (Standard)</option>
                     <option value="hi">High (Lockdown)</option>
@@ -360,14 +386,13 @@
             </div>
         <button class="add-btn" onclick="addGuestRow('')">+ Add Guest</button>
 
-        <div class="advanced-row">
-            <details>
-                <summary>Advanced Settings <span>▼</span></summary>
-                <div class="advanced-label">Banned Channels (Comma separated):</div>
-                <textarea id="banned-channels" class="chaos-input" placeholder="e.g., Hope World, Tech Bros" oninput="saveState()"></textarea>
-            </details>
-            <button class="help-btn" onclick="openInstructions()">HOW TO USE</button>
-        </div>
+        <details>
+            <summary>Advanced Settings <span>▼</span></summary>
+            <div class="advanced-label">Banned Channels (Comma separated):</div>
+            <textarea id="banned-channels" class="chaos-input" placeholder="e.g., Hope World, Tech Bros" oninput="saveState()"></textarea>
+        </details>
+        
+        <button class="help-btn" onclick="openInstructions()">HOW TO USE</button>
 
         <button class="search-btn" onclick="generateDashboard()">Initialize Feed</button>
     </div>
@@ -383,7 +408,7 @@
             <h2>Operator Manual</h2>
             <p><strong>1. Add Guests:</strong> Enter the names of the guests, experts, or personalities you wish to monitor. You can track as many as you need.</p>
             <p><strong>2. Engage Spam Shield:</strong> This is your primary defense against YouTube's algorithm.<br>
-            • <strong>Low:</strong> For niche or academic experts. Minimal filtering.<br>
+            <br>• <strong>Low:</strong> For niche or academic experts. Minimal filtering.<br>
             • <strong>Medium:</strong> The default. Blocks standard reaction and drama clips.<br>
             • <strong>High:</strong> Total lockdown. Use this for highly spammed guests (e.g., Elon Musk) to block foreign translations, AI summaries, and grifter networks.</p>
             <p><strong>3. Initialize Feed:</strong> Tap to compile your targets into a clean, unified launch pad.</p>
@@ -410,7 +435,6 @@
         "month_long_popular": "CAMSBggEEAEYAg%253D%253D"
     };
 
-    // Centralized View Router
     window.addEventListener('hashchange', () => {
         setupView.style.display = 'none';
         dashboardView.style.display = 'none';
@@ -430,7 +454,7 @@
             history.replaceState(null, null, window.location.pathname);
         }
 
-        let savedState = JSON.parse(localStorage.getItem('theGuestListV15'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListArtDeco'));
         
         if (!savedState) {
             addGuestRow('');
@@ -460,7 +484,7 @@
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListV15', JSON.stringify(state));
+        localStorage.setItem('theGuestListArtDeco', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
