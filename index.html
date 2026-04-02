@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,6 +96,7 @@
             border-radius: 12px;
             font-size: 18px;
             flex-grow: 1;
+            width: 50%;
             outline: none;
             cursor: pointer;
             font-weight: 600;
@@ -173,9 +175,9 @@
         
         .advanced-row {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            flex-direction: column;
             gap: 12px;
+            width: 100%;
         }
 
         details {
@@ -183,7 +185,8 @@
             padding: 18px;
             border-radius: 16px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-            flex-grow: 1;
+            width: 100%;
+            box-sizing: border-box;
         }
         summary {
             color: #ffffff;
@@ -227,6 +230,7 @@
             transition: all 0.2s ease;
             white-space: nowrap;
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            width: 100%;
         }
         .help-btn:active { background-color: #3a3a3c; transform: translateY(2px); }
 
@@ -239,7 +243,7 @@
         .launch-card {
             background-color: var(--card-bg);
             border: none;
-            border-top: 1px solid rgba(255,255,255,0.05); /* Simulates 3D depth on true black */
+            border-top: 1px solid rgba(255,255,255,0.05);
             border-radius: 16px;
             padding: 26px 20px;
             display: flex;
@@ -247,7 +251,7 @@
             align-items: center;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.1s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); /* Deep premium shadow */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             margin-bottom: 16px;
         }
         .launch-card:active {
@@ -341,8 +345,8 @@
                 </select>
                 
                 <select id="sort-order" onchange="saveState()">
-                    <option value="relevance" selected>Sort: Relevance</option>
-                    <option value="popular">Sort: Popularity</option>
+                    <option value="relevance" selected>Relevance</option>
+                    <option value="popular">Popularity</option>
                 </select>
             </div>
 
@@ -357,7 +361,7 @@
         </div>
 
         <div id="guest-list">
-            </div>
+        </div>
         <button class="add-btn" onclick="addGuestRow('')">+ Add Guest</button>
 
         <div class="advanced-row">
@@ -374,7 +378,7 @@
 
     <div id="dashboard-view">
         <div id="card-container">
-            </div>
+        </div>
         <button class="back-btn" onclick="returnViaButton()">← Back</button>
     </div>
 
@@ -410,7 +414,6 @@
         "month_long_popular": "CAMSBggEEAEYAg%253D%253D"
     };
 
-    // Centralized View Router
     window.addEventListener('hashchange', () => {
         setupView.style.display = 'none';
         dashboardView.style.display = 'none';
