@@ -9,13 +9,13 @@
     
     <style>
         :root {
-            --bg-color: #0a0a0a;
+            --bg-color: #000000;
             --text-color: #ffffff;
-            --input-bg: #1e1e1e;
+            --input-bg: #1c1c1e;
             --accent: #ff0000;
             --btn-hover: #cc0000;
-            --panel-bg: #141414;
-            --card-bg: #1f1f1f;
+            --panel-bg: #121212;
+            --card-bg: #1c1c1e;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -63,14 +63,14 @@
             cursor: pointer;
             text-transform: uppercase;
             margin-top: 8px;
-            box-shadow: 0 4px 12px rgba(255,0,0,0.2);
+            box-shadow: 0 4px 16px rgba(255,0,0,0.3);
             width: 100%;
             transition: all 0.2s ease;
         }
         .search-btn:active { 
             background-color: var(--btn-hover); 
             transform: translateY(2px);
-            box-shadow: 0 2px 6px rgba(255,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(255,0,0,0.3);
         }
         
         .controls-panel {
@@ -80,7 +80,7 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            border: 1px solid #2a2a2a;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
         }
         .row-split {
             display: flex;
@@ -90,14 +90,18 @@
         select {
             background: var(--input-bg);
             color: #ffffff;
-            border: 1px solid #333;
+            border: 2px solid transparent;
             padding: 16px;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 18px;
             flex-grow: 1;
             outline: none;
             cursor: pointer;
             font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        select:focus {
+            background-color: #252528;
         }
         
         .squelch-container {
@@ -106,8 +110,8 @@
             gap: 10px;
             background: var(--input-bg);
             padding: 10px 16px;
-            border-radius: 10px;
-            border: 1px solid #333;
+            border-radius: 12px;
+            border: 2px solid transparent;
         }
         .squelch-label {
             font-size: 18px;
@@ -126,58 +130,59 @@
             padding: 18px;
             font-size: 20px;
             background-color: var(--input-bg);
-            border: 1px solid #333;
+            border: 2px solid transparent;
             color: #ffffff;
-            border-radius: 12px;
+            border-radius: 14px;
             outline: none;
             font-weight: 600;
+            transition: all 0.2s ease;
         }
         input[type="text"]::placeholder, textarea::placeholder {
             color: #888;
         }
         input[type="text"]:focus, textarea:focus {
             border-color: var(--accent);
-            background-color: #252525;
+            background-color: #252528;
         }
         
         .delete-btn {
-            background-color: #2a2a2a;
+            background-color: #252528;
             color: #ffffff;
-            border: 1px solid #333;
+            border: none;
             width: 60px;
             height: 60px;
             font-size: 22px;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
-        .delete-btn:active { background-color: #444; }
+        .delete-btn:active { background-color: #3a3a3c; }
         
         .add-btn {
             background-color: transparent;
             color: #ffffff;
-            border: 2px dashed #555;
+            border: 2px dashed #444;
             padding: 18px;
             font-size: 18px;
             border-radius: 14px;
             cursor: pointer;
             font-weight: 800;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
-        .add-btn:active { background-color: #1a1a1a; border-color: #888; }
+        .add-btn:active { background-color: #1a1a1c; border-color: #666; }
         
         .advanced-row {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 10px;
+            gap: 12px;
         }
 
         details {
             background: var(--panel-bg);
             padding: 18px;
-            border-radius: 14px;
-            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
             flex-grow: 1;
         }
         summary {
@@ -211,18 +216,19 @@
         }
 
         .help-btn {
-            background-color: #222;
+            background-color: #252528;
             color: #ffffff;
-            border: 1px solid #444;
+            border: none;
             padding: 18px;
             font-size: 16px;
             font-weight: 800;
             border-radius: 14px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
             white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
-        .help-btn:active { background-color: #333; }
+        .help-btn:active { background-color: #3a3a3c; transform: translateY(2px); }
 
         /* View Toggling */
         #setup-view { display: flex; flex-direction: column; gap: 20px; width: 100%; }
@@ -232,19 +238,20 @@
         /* Launch Cards */
         .launch-card {
             background-color: var(--card-bg);
-            border: 1px solid #333;
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.05); /* Simulates 3D depth on true black */
             border-radius: 16px;
             padding: 26px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            margin-bottom: 14px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); /* Deep premium shadow */
+            margin-bottom: 16px;
         }
         .launch-card:active {
-            background-color: #2a2a2a;
+            background-color: #252528;
             transform: scale(0.98);
         }
         .card-name {
@@ -276,23 +283,25 @@
         }
 
         .back-btn {
-            background-color: #222;
+            background-color: #252528;
             color: #ffffff;
-            border: 1px solid #444;
+            border: none;
             padding: 18px;
             font-size: 18px;
             font-weight: 800;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
-            margin-top: 14px;
+            margin-top: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
         }
-        .back-btn:active { background-color: #333; }
+        .back-btn:active { background-color: #3a3a3c; transform: translateY(2px); }
 
         .instruction-block {
             background: var(--panel-bg);
             padding: 24px;
             border-radius: 16px;
-            border: 1px solid #2a2a2a;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
             color: #ffffff;
         }
         .instruction-block h2 {
@@ -300,9 +309,9 @@
             font-size: 22px;
             font-weight: 900;
             text-transform: uppercase;
-            border-bottom: 2px solid #333;
-            padding-bottom: 10px;
-            margin-bottom: 16px;
+            border-bottom: 2px solid #2a2a2a;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
         }
         .instruction-block p {
             font-size: 16px;
@@ -349,7 +358,7 @@
 
         <div id="guest-list">
             </div>
-        <button class="add-btn" onclick="addGuestRow('')">+ Add Target</button>
+        <button class="add-btn" onclick="addGuestRow('')">+ Add Guest</button>
 
         <div class="advanced-row">
             <details>
@@ -357,7 +366,7 @@
                 <div class="advanced-label">Banned Channels (Comma separated):</div>
                 <textarea id="banned-channels" class="chaos-input" placeholder="e.g., Hope World, Tech Bros" oninput="saveState()"></textarea>
             </details>
-            <button class="help-btn" onclick="openInstructions()">? HOW TO USE</button>
+            <button class="help-btn" onclick="openInstructions()">HOW TO USE</button>
         </div>
 
         <button class="search-btn" onclick="generateDashboard()">Initialize Feed</button>
@@ -366,21 +375,21 @@
     <div id="dashboard-view">
         <div id="card-container">
             </div>
-        <button class="back-btn" onclick="returnViaButton()">← Back to Setup</button>
+        <button class="back-btn" onclick="returnViaButton()">← Back</button>
     </div>
 
     <div id="instructions-view">
         <div class="instruction-block">
             <h2>Operator Manual</h2>
-            <p><strong>1. Add Targets:</strong> Enter the names of the guests, experts, or personalities you wish to monitor. You can track as many as you need.</p>
+            <p><strong>1. Add Guests:</strong> Enter the names of the guests, experts, or personalities you wish to monitor. You can track as many as you need.</p>
             <p><strong>2. Engage Spam Shield:</strong> This is your primary defense against YouTube's algorithm.<br>
             • <strong>Low:</strong> For niche or academic experts. Minimal filtering.<br>
             • <strong>Medium:</strong> The default. Blocks standard reaction and drama clips.<br>
-            • <strong>High:</strong> Total lockdown. Use this for highly spammed targets (e.g., Elon Musk) to block foreign translations, AI summaries, and grifter networks.</p>
+            • <strong>High:</strong> Total lockdown. Use this for highly spammed guests (e.g., Elon Musk) to block foreign translations, AI summaries, and grifter networks.</p>
             <p><strong>3. Initialize Feed:</strong> Tap to compile your targets into a clean, unified launch pad.</p>
-            <p><strong>4. The Dashboard:</strong> Tap any Target Card to instantly launch a perfectly filtered, long-form YouTube query. When the video ends, simply swipe back to return to your dashboard and select your next target.</p>
+            <p><strong>4. The Dashboard:</strong> Tap any Guest Card to instantly launch a perfectly filtered, long-form YouTube query. When the video ends, simply swipe back to return to your dashboard and select your next guest.</p>
         </div>
-        <button class="back-btn" onclick="returnViaButton()">← Acknowledge & Return</button>
+        <button class="back-btn" onclick="returnViaButton()">← Back</button>
     </div>
 
 </div>
@@ -417,12 +426,11 @@
     });
 
     function initApp() {
-        // Clear any active hashes on fresh load
         if (window.location.hash) {
             history.replaceState(null, null, window.location.pathname);
         }
 
-        let savedState = JSON.parse(localStorage.getItem('theGuestListV14'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListV15'));
         
         if (!savedState) {
             addGuestRow('');
@@ -452,7 +460,7 @@
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListV14', JSON.stringify(state));
+        localStorage.setItem('theGuestListV15', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -462,7 +470,7 @@
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'guest-input';
-        input.placeholder = 'Enter target name...';
+        input.placeholder = 'Enter guest name...';
         input.value = value;
         input.addEventListener('input', saveState);
         
@@ -500,7 +508,7 @@
         });
 
         if (activeNames.length === 0) {
-            alert("Error: Minimum of one target name required.");
+            alert("Error: Minimum of one guest name required.");
             return;
         }
 
