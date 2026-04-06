@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>The Guest List</title>
     
     <link rel="manifest" href="manifest.json">
@@ -11,14 +11,13 @@
         :root {
             --bg-color: #000000;
             --text-color: #ffffff;
-            --input-bg: #1c1c1e;
-            --accent: #ff0000;
-            --btn-hover: #cc0000;
-            --panel-bg: #121212;
-            --card-bg: #1c1c1e;
+            --sub-text: #8e8e93;
+            --pill-bg: #1c1c1e;
+            --accent-red: #ff3b30;
+            --accent-gold: #d4af37;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
@@ -32,12 +31,15 @@
             max-width: 450px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
         }
+        
+        /* HEADER */
         h1 {
             text-align: center;
-            font-size: 34px;
-            margin-bottom: 4px;
+            font-size: 32px;
+            margin-bottom: 2px;
+            margin-top: 10px;
             letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: 900;
@@ -45,152 +47,113 @@
         }
         .tagline {
             text-align: center;
-            font-size: 15px;
-            color: #ffffff;
-            margin-top: -4px;
+            font-size: 13px;
+            color: var(--text-color);
+            margin-top: 0px;
             margin-bottom: 12px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
         }
-        .search-btn {
-            background-color: var(--accent);
-            color: #ffffff;
-            border: none;
-            padding: 20px;
-            font-size: 20px;
-            font-weight: 800;
-            border-radius: 14px;
-            cursor: pointer;
-            text-transform: uppercase;
-            margin-top: 8px;
-            box-shadow: 0 4px 16px rgba(255,0,0,0.3);
-            width: 100%;
-            transition: all 0.2s ease;
-        }
-        .search-btn:active { 
-            background-color: var(--btn-hover); 
-            transform: translateY(2px);
-            box-shadow: 0 2px 8px rgba(255,0,0,0.3);
-        }
-        
-        .controls-panel {
-            background: var(--panel-bg);
-            padding: 20px;
-            border-radius: 16px;
+
+        /* GUEST INPUT ROW */
+        #guest-list {
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-        }
-        .row-split {
-            display: flex;
             gap: 12px;
             width: 100%;
         }
-        select {
-            background: var(--input-bg);
-            color: #ffffff;
-            border: 2px solid transparent;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 18px;
-            flex-grow: 1;
-            width: 50%;
-            outline: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-        select:focus {
-            background-color: #252528;
-        }
-        
-        .squelch-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--input-bg);
-            padding: 10px 16px;
-            border-radius: 12px;
-            border: 2px solid transparent;
-        }
-        .squelch-label {
-            font-size: 18px;
-            font-weight: 800;
-            white-space: nowrap;
-            color: #ffffff;
-        }
-        
         .guest-row {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
+            width: 100%;
         }
-        input[type="text"], textarea {
+        input[type="text"], textarea, .adv-select {
             flex-grow: 1;
-            padding: 18px;
-            font-size: 20px;
-            background-color: var(--input-bg);
-            border: 2px solid transparent;
-            color: #ffffff;
-            border-radius: 14px;
+            padding: 16px 20px;
+            font-size: 16px;
+            background-color: var(--pill-bg);
+            border: none;
+            color: var(--text-color);
+            border-radius: 16px;
             outline: none;
-            font-weight: 600;
-            transition: all 0.2s ease;
+            font-weight: 500;
+            box-sizing: border-box;
+            transition: background-color 0.2s;
         }
-        input[type="text"]::placeholder, textarea::placeholder {
-            color: #888;
-        }
-        input[type="text"]:focus, textarea:focus {
-            border-color: var(--accent);
-            background-color: #252528;
-        }
+        input[type="text"]::placeholder, textarea::placeholder { color: var(--sub-text); }
+        input[type="text"]:focus, textarea:focus, .adv-select:focus { background-color: #2c2c2e; }
         
         .delete-btn {
-            background-color: #252528;
-            color: #ffffff;
+            background-color: var(--pill-bg);
+            color: var(--sub-text);
             border: none;
-            width: 60px;
-            height: 60px;
-            font-size: 22px;
-            border-radius: 14px;
+            width: 52px;
+            height: 52px;
+            font-size: 20px;
+            border-radius: 16px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
         }
-        .delete-btn:active { background-color: #3a3a3c; }
-        
+        .delete-btn:active { background-color: #2c2c2e; color: #fff; }
+
         .add-btn {
             background-color: transparent;
             color: #ffffff;
-            border: 2px dashed #444;
-            padding: 18px;
-            font-size: 18px;
-            border-radius: 14px;
+            border: 2px dashed #333;
+            padding: 16px;
+            font-size: 16px;
+            border-radius: 16px;
             cursor: pointer;
-            font-weight: 800;
+            font-weight: 700;
             transition: all 0.2s ease;
-        }
-        .add-btn:active { background-color: #1a1a1c; border-color: #666; }
-        
-        .advanced-row {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
             width: 100%;
         }
+        .add-btn:active { background-color: var(--pill-bg); }
 
+        /* PRIMARY CONTROLS */
+        .controls-panel {
+            background: #121212;
+            padding: 16px;
+            border-radius: 20px;
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .controls-panel select {
+            background: var(--pill-bg);
+            color: var(--text-color);
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            flex: 1;
+            outline: none;
+            cursor: pointer;
+            text-align: center;
+            text-align-last: center;
+            transition: background-color 0.2s;
+        }
+        .controls-panel select:focus { background-color: #2c2c2e; }
+
+        /* ADVANCED SETTINGS */
         details {
-            background: var(--panel-bg);
+            background: #121212;
             padding: 18px;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            border-radius: 20px;
             width: 100%;
             box-sizing: border-box;
         }
         summary {
             color: #ffffff;
-            font-size: 18px;
-            font-weight: 800;
+            font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
             list-style: none;
             display: flex;
@@ -199,133 +162,165 @@
         summary::-webkit-details-marker { display: none; }
         details[open] summary { margin-bottom: 16px; }
         
+        .advanced-row-internal {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
         .advanced-label {
-            font-size: 16px;
-            color: #ffffff;
-            margin-bottom: 8px;
-            margin-top: 14px;
-            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-color);
+            font-weight: 600;
+            flex-shrink: 0;
+            width: 120px;
+        }
+        .adv-select {
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            text-align: center;
+            text-align-last: center;
         }
         .chaos-input {
             width: 100%;
-            box-sizing: border-box;
-            font-size: 18px !important;
+            font-size: 15px !important;
             padding: 14px !important;
+            margin-bottom: 12px;
+            border-radius: 12px !important;
         }
         textarea.chaos-input {
             resize: vertical;
-            min-height: 90px;
+            min-height: 80px;
+            margin-bottom: 0;
+        }
+        .label-stacked {
+            width: 100%;
+            margin-bottom: 8px;
         }
 
+        /* BUTTONS */
         .help-btn {
-            background-color: #252528;
+            background-color: var(--pill-bg);
             color: #ffffff;
             border: none;
             padding: 18px;
-            font-size: 16px;
-            font-weight: 800;
-            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 16px;
             cursor: pointer;
             transition: all 0.2s ease;
-            white-space: nowrap;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             width: 100%;
         }
-        .help-btn:active { background-color: #3a3a3c; transform: translateY(2px); }
+        .help-btn:active { background-color: #2c2c2e; transform: translateY(2px); }
 
-        /* View Toggling */
-        #setup-view { display: flex; flex-direction: column; gap: 20px; width: 100%; }
-        #dashboard-view { display: none; flex-direction: column; gap: 20px; width: 100%; }
-        #instructions-view { display: none; flex-direction: column; gap: 20px; width: 100%; }
-        
-        /* Launch Cards */
-        .launch-card {
-            background-color: var(--card-bg);
+        .search-btn {
+            background-color: var(--accent-red);
+            color: #ffffff;
             border: none;
-            border-top: 1px solid rgba(255,255,255,0.05); /* Simulates 3D depth on true black */
-            border-radius: 16px;
-            padding: 26px 20px;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 800;
+            border-radius: 20px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            margin-top: 4px;
+            box-shadow: 0 4px 14px rgba(255, 59, 48, 0.3);
+            width: 100%;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+        .search-btn:active { 
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        /* VIEW TOGGLING */
+        #setup-view { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+        #dashboard-view { display: none; flex-direction: column; gap: 16px; width: 100%; }
+        #instructions-view { display: none; flex-direction: column; gap: 16px; width: 100%; }
+
+        /* LAUNCH CARDS */
+        .launch-card {
+            background-color: var(--pill-bg);
+            border: none;
+            border-radius: 18px;
+            padding: 24px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); /* Deep premium shadow */
-            margin-bottom: 16px;
+            transition: transform 0.1s, background-color 0.2s;
+            margin-bottom: 8px;
         }
         .launch-card:active {
-            background-color: #252528;
+            background-color: #2c2c2e;
             transform: scale(0.98);
         }
         .card-name {
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
+            font-size: 20px;
+            font-weight: 700;
             color: #ffffff;
+            letter-spacing: 0.3px;
         }
-        
         .card-action {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 4px;
+            gap: 2px;
         }
         .card-icon {
-            font-size: 28px;
-            color: var(--accent);
+            font-size: 20px;
+            color: var(--accent-red);
             line-height: 1;
         }
         .card-go {
-            font-size: 14px;
-            font-weight: 900;
-            color: #ffffff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            line-height: 1;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--sub-text);
+            letter-spacing: 0.5px;
         }
 
         .back-btn {
-            background-color: #252528;
+            background-color: var(--pill-bg);
             color: #ffffff;
             border: none;
-            padding: 18px;
-            font-size: 18px;
-            font-weight: 800;
-            border-radius: 14px;
+            padding: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 20px;
             cursor: pointer;
             margin-top: 8px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            transition: background-color 0.2s;
         }
-        .back-btn:active { background-color: #3a3a3c; transform: translateY(2px); }
+        .back-btn:active { background-color: #2c2c2e; }
 
         .instruction-block {
-            background: var(--panel-bg);
+            background: #121212;
             padding: 24px;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            border-radius: 20px;
             color: #ffffff;
         }
         .instruction-block h2 {
             margin-top: 0;
-            font-size: 22px;
-            font-weight: 900;
-            text-transform: uppercase;
-            border-bottom: 2px solid #2a2a2a;
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #333;
             padding-bottom: 12px;
-            margin-bottom: 18px;
         }
         .instruction-block p {
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.6;
             margin-bottom: 16px;
-            color: #e0e0e0;
+            color: #d1d1d6;
         }
-        .instruction-block strong {
-            color: #ffffff;
-            font-weight: 800;
-        }
+        .instruction-block strong { color: #ffffff; }
     </style>
 </head>
 <body>
@@ -335,62 +330,81 @@
     <p class="tagline">The most efficient way to monitor multiple guests at once.</p>
 
     <div id="setup-view">
+        
+        <div id="guest-list">
+            </div>
+        <button class="add-btn" onclick="addGuestRow('')">+ Add Guest</button>
+
         <div class="controls-panel">
-            <div class="row-split">
-                <select id="timeframe" onchange="saveState()">
-                    <option value="today">Today</option>
-                    <option value="week" selected>This Week</option>
-                    <option value="month">This Month</option>
-                </select>
-                
-                <select id="sort-order" onchange="saveState()">
+            <select id="timeframe" onchange="saveState()">
+                <option value="today">Today</option>
+                <option value="week" selected>This Week</option>
+                <option value="month">This Month</option>
+            </select>
+            
+            <select id="squelch-level" onchange="saveState()">
+                <option value="lo">Shield: Low</option>
+                <option value="med" selected>Shield: Med</option>
+                <option value="hi">Shield: High</option>
+            </select>
+        </div>
+
+        <details>
+            <summary>Advanced Settings <span>▼</span></summary>
+            
+            <div class="advanced-row-internal">
+                <div class="advanced-label">Sort Order:</div>
+                <select id="sort-order" class="adv-select" onchange="saveState()">
                     <option value="relevance" selected>Relevance</option>
                     <option value="popular">Popularity</option>
                 </select>
             </div>
 
-            <div class="squelch-container">
-                <div class="squelch-label">Spam Shield:</div>
-                <select id="squelch-level" onchange="saveState()" style="border: none; padding: 4px; background: transparent; font-size: 18px;">
-                    <option value="lo">Low (Niche)</option>
-                    <option value="med" selected>Med (Standard)</option>
-                    <option value="hi">High (Lockdown)</option>
+            <div class="advanced-row-internal">
+                <div class="advanced-label">Video Length:</div>
+                <select id="video-length" class="adv-select" onchange="saveState()">
+                    <option value="any">Any Length</option>
+                    <option value="short">Short (< 4m)</option>
+                    <option value="long" selected>Long (20m+)</option>
                 </select>
             </div>
-        </div>
 
-        <div id="guest-list">
-        </div>
-        <button class="add-btn" onclick="addGuestRow('')">+ Add Guest</button>
+            <div class="advanced-row-internal">
+                <div class="advanced-label">Broadcast:</div>
+                <select id="live-status" class="adv-select" onchange="saveState()">
+                    <option value="all" selected>All Videos</option>
+                    <option value="live">Live Now</option>
+                </select>
+            </div>
 
-        <div class="advanced-row">
-            <details>
-                <summary>Advanced Settings <span>▼</span></summary>
-                <div class="advanced-label">Banned Channels (Comma separated):</div>
-                <textarea id="banned-channels" class="chaos-input" placeholder="e.g., Hope World, Tech Bros" oninput="saveState()"></textarea>
-            </details>
-            <button class="help-btn" onclick="openInstructions()">HOW TO USE</button>
-        </div>
+            <div class="advanced-label label-stacked">Must Include (Keywords):</div>
+            <input type="text" id="must-include" class="chaos-input" placeholder="e.g., Apple, Bitcoin" oninput="saveState()">
+
+            <div class="advanced-label label-stacked">Banned Channels:</div>
+            <textarea id="banned-channels" class="chaos-input" placeholder="e.g., Hope World" oninput="saveState()"></textarea>
+        </details>
+        
+        <button class="help-btn" onclick="openInstructions()">HOW TO USE</button>
 
         <button class="search-btn" onclick="generateDashboard()">Initialize Feed</button>
     </div>
 
     <div id="dashboard-view">
         <div id="card-container">
-        </div>
-        <button class="back-btn" onclick="returnViaButton()">← Back</button>
+            </div>
+        <button class="back-btn" onclick="returnViaButton()">← Back to Setup</button>
     </div>
 
     <div id="instructions-view">
         <div class="instruction-block">
             <h2>Operator Manual</h2>
-            <p><strong>1. Add Guests:</strong> Enter the names of the guests, experts, or personalities you wish to monitor. You can track as many as you need.</p>
-            <p><strong>2. Engage Spam Shield:</strong> This is your primary defense against YouTube's algorithm.<br>
-            • <strong>Low:</strong> For niche or academic experts. Minimal filtering.<br>
-            • <strong>Medium:</strong> The default. Blocks standard reaction and drama clips.<br>
-            • <strong>High:</strong> Total lockdown. Forces the guest's name to be in the video title, blocking passing mentions, foreign translations, AI summaries, and grifter networks.</p>
-            <p><strong>3. Initialize Feed:</strong> Tap to compile your targets into a clean, unified launch pad.</p>
-            <p><strong>4. The Dashboard:</strong> Tap any Guest Card to instantly launch a perfectly filtered, long-form YouTube query. When the video ends, simply swipe back to return to your dashboard and select your next guest.</p>
+            <p><strong>1. Add Guests:</strong> Enter the names of the individuals you wish to monitor. You can track as many targets as necessary.</p>
+            <p><strong>2. Primary Controls:</strong> Select your desired timeframe and Spam Shield setting.<br>
+            • <strong>Low:</strong> Minimal filtering.<br>
+            • <strong>Medium:</strong> Blocks standard low-effort reaction clips.<br>
+            • <strong>High:</strong> Lockdown protocol. Forces the guest's name to be in the video title, blocking passing mentions, AI summaries, and foreign translations.</p>
+            <p><strong>3. Advanced Settings:</strong> Use this menu to refine your search parameters. You can filter by exact video length, search strictly for active Live Streams, whitelist specific topic keywords, or blacklist offending YouTube channels.</p>
+            <p><strong>4. The Dashboard:</strong> Tap "Initialize Feed" to compile your targets into a clean launch pad. Tap any card to launch a strictly filtered query. When the video concludes, simply swipe back to return to your dashboard.</p>
         </div>
         <button class="back-btn" onclick="returnViaButton()">← Back</button>
     </div>
@@ -404,16 +418,31 @@
     const instructionsView = document.getElementById('instructions-view');
     const cardContainer = document.getElementById('card-container');
 
+    // Matrix dynamically maps Time_Length_Sort. 
+    // Type:Video is baked into these base64 combinations.
     const spMatrix = {
-        "today_long_relevance": "EgYIAhABGAI%253D",
-        "week_long_relevance": "EgYIAxABGAI%253D",
-        "month_long_relevance": "EgYIBBABGAI%253D",
+        "today_any_relevance": "CgIIAQ%253D%253D",
+        "today_short_relevance": "CgIQARgB",
+        "today_long_relevance": "CgIQARgC",
+        "today_any_popular": "CAMSBAgCEAE%253D",
+        "today_short_popular": "CAMSBggCEAEYAQ%253D%253D",
         "today_long_popular": "CAMSBggCEAEYAg%253D%253D",
+        
+        "week_any_relevance": "CgIIAw%253D%253D",
+        "week_short_relevance": "CgIQAxgB",
+        "week_long_relevance": "EgYIAxABGAI%253D",
+        "week_any_popular": "CAMSBAgDEAE%253D",
+        "week_short_popular": "CAMSBggDEAEYAQ%253D%253D",
         "week_long_popular": "CAMSBggDEAEYAg%253D%253D",
+        
+        "month_any_relevance": "CgIIBA%253D%253D",
+        "month_short_relevance": "CgIQBBgB",
+        "month_long_relevance": "EgYIBBABGAI%253D",
+        "month_any_popular": "CAMSBAgEEAE%253D",
+        "month_short_popular": "CAMSBggEEAEYAQ%253D%253D",
         "month_long_popular": "CAMSBggEEAEYAg%253D%253D"
     };
 
-    // Centralized View Router
     window.addEventListener('hashchange', () => {
         setupView.style.display = 'none';
         dashboardView.style.display = 'none';
@@ -433,7 +462,7 @@
             history.replaceState(null, null, window.location.pathname);
         }
 
-        let savedState = JSON.parse(localStorage.getItem('theGuestListV18'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListV19'));
         
         if (!savedState) {
             addGuestRow('');
@@ -444,8 +473,11 @@
                 addGuestRow('');
             }
             if (savedState.timeframe) document.getElementById('timeframe').value = savedState.timeframe;
-            if (savedState.sortOrder) document.getElementById('sort-order').value = savedState.sortOrder;
             if (savedState.squelchLevel) document.getElementById('squelch-level').value = savedState.squelchLevel;
+            if (savedState.sortOrder) document.getElementById('sort-order').value = savedState.sortOrder;
+            if (savedState.videoLength) document.getElementById('video-length').value = savedState.videoLength;
+            if (savedState.liveStatus) document.getElementById('live-status').value = savedState.liveStatus;
+            if (savedState.mustInclude) document.getElementById('must-include').value = savedState.mustInclude;
             if (savedState.bannedChannels) document.getElementById('banned-channels').value = savedState.bannedChannels;
         }
     }
@@ -458,12 +490,15 @@
         const state = {
             guests: guestArray,
             timeframe: document.getElementById('timeframe').value,
-            sortOrder: document.getElementById('sort-order').value,
             squelchLevel: document.getElementById('squelch-level').value,
+            sortOrder: document.getElementById('sort-order').value,
+            videoLength: document.getElementById('video-length').value,
+            liveStatus: document.getElementById('live-status').value,
+            mustInclude: document.getElementById('must-include').value,
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListV18', JSON.stringify(state));
+        localStorage.setItem('theGuestListV19', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -545,13 +580,25 @@
         const squelchLevel = document.getElementById('squelch-level').value;
         let searchQuery = `"${guestName}"`;
 
-        // INJECT INTITLE FOR HIGH LOCKDOWN
+        // HIGH SHIELD INTITLE OVERRIDE
         if (squelchLevel === 'hi') {
             searchQuery = `intitle:"${guestName}"`;
         }
 
-        let squelchWords = [];
+        // MUST INCLUDE KEYWORDS
+        const mustIncludeInput = document.getElementById('must-include').value.trim();
+        if (mustIncludeInput !== "") {
+            const keywords = mustIncludeInput.split(',');
+            keywords.forEach(word => {
+                let cleanWord = word.trim();
+                if (cleanWord !== "") {
+                    searchQuery += ` +"${cleanWord}"`;
+                }
+            });
+        }
 
+        // SPAM SHIELD NEGATIVES
+        let squelchWords = [];
         if (squelchLevel === 'lo') {
             squelchWords = ['reaction', 'reacts'];
         } else if (squelchLevel === 'med') {
@@ -564,6 +611,7 @@
             searchQuery += ` -${word}`;
         });
 
+        // BANNED CHANNELS
         const bannedInput = document.getElementById('banned-channels').value.trim();
         if (bannedInput !== "") {
             const bannedChannels = bannedInput.split(',');
@@ -576,10 +624,21 @@
             });
         }
 
+        // URL PARAMETER ROUTING
         const timeVal = document.getElementById('timeframe').value;
         const sortVal = document.getElementById('sort-order').value;
+        const lengthVal = document.getElementById('video-length').value;
+        const liveVal = document.getElementById('live-status').value;
         
-        const timeframeCode = spMatrix[timeVal + "_long_" + sortVal];
+        let timeframeCode = "";
+
+        if (liveVal === 'live') {
+            // Live stream code overrides length/time natively on YouTube
+            timeframeCode = "EgJAAQ%253D%253D"; 
+        } else {
+            const matrixKey = `${timeVal}_${lengthVal}_${sortVal}`;
+            timeframeCode = spMatrix[matrixKey] || "CgIIAQ%253D%253D"; // Default fallback
+        }
         
         const baseUrl = "https://www.youtube.com/results?search_query=";
         let finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&sp=" + timeframeCode + "&hl=en&gl=US";
