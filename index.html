@@ -161,31 +161,6 @@
         summary::-webkit-details-marker { display: none; }
         details[open] summary { margin-bottom: 16px; }
         
-        .advanced-row-internal {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-        .advanced-label {
-            font-size: 14px;
-            color: var(--text-color);
-            font-weight: 600;
-            flex-shrink: 0;
-            width: 120px;
-        }
-        .adv-select {
-            padding: 14px;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 12px;
-            cursor: pointer;
-            -webkit-appearance: none;
-            appearance: none;
-            text-align: center;
-            text-align-last: center;
-        }
         .chaos-input {
             width: 100%;
             font-size: 15px !important;
@@ -201,6 +176,9 @@
         .label-stacked {
             width: 100%;
             margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-color);
+            font-weight: 600;
         }
 
         /* BUTTONS */
@@ -360,22 +338,14 @@
             </select>
             
             <select id="squelch-level" onchange="saveState()">
-                <option value="lo">Shield: Low</option>
-                <option value="med" selected>Shield: Med</option>
+                <option value="lo" selected>Shield: Low</option>
+                <option value="med">Shield: Med</option>
                 <option value="hi">Shield: High</option>
             </select>
         </div>
 
         <details>
             <summary>Advanced Settings <span>▼</span></summary>
-            
-            <div class="advanced-row-internal">
-                <div class="advanced-label">Sort Order:</div>
-                <select id="sort-order" class="adv-select" onchange="saveState()">
-                    <option value="relevance" selected>Relevance</option>
-                    <option value="popular">Popularity</option>
-                </select>
-            </div>
 
             <div class="advanced-label label-stacked">Must Include (Keywords):</div>
             <input type="text" id="must-include" class="chaos-input" placeholder="e.g., Apple, Bitcoin" oninput="saveState()">
@@ -424,14 +394,11 @@
     const instructionsView = document.getElementById('instructions-view');
     const cardContainer = document.getElementById('card-container');
 
-    // V23 Engine Hard-Lock: All searches strictly locked to Type: Video and Duration: >20m
+    // V24 Engine Hard-Lock: All searches locked to Relevance, Type: Video, Duration: >20m
     const spMatrix = {
-        "today_relevance": "CgQQARgC",
-        "today_popular": "CAISBggBEAEYAg%253D%253D",
-        "week_relevance": "EgYIAxABGAI%253D",
-        "week_popular": "CAMSBggDEAEYAg%253D%253D",
-        "month_relevance": "EgYIBBABGAI%253D",
-        "month_popular": "CAMSBggEEAEYAg%253D%253D"
+        "today": "CgQQARgC",
+        "week": "EgYIAxABGAI%253D",
+        "month": "EgYIBBABGAI%253D"
     };
 
     window.addEventListener('hashchange', () => {
@@ -453,7 +420,7 @@
             history.replaceState(null, null, window.location.pathname);
         }
 
-        let savedState = JSON.parse(localStorage.getItem('theGuestListV23'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListV24'));
         
         if (!savedState) {
             addGuestRow('');
@@ -465,7 +432,6 @@
             }
             if (savedState.timeframe) document.getElementById('timeframe').value = savedState.timeframe;
             if (savedState.squelchLevel) document.getElementById('squelch-level').value = savedState.squelchLevel;
-            if (savedState.sortOrder) document.getElementById('sort-order').value = savedState.sortOrder;
             if (savedState.mustInclude) document.getElementById('must-include').value = savedState.mustInclude;
             if (savedState.bannedChannels) document.getElementById('banned-channels').value = savedState.bannedChannels;
         }
@@ -480,12 +446,11 @@
             guests: guestArray,
             timeframe: document.getElementById('timeframe').value,
             squelchLevel: document.getElementById('squelch-level').value,
-            sortOrder: document.getElementById('sort-order').value,
             mustInclude: document.getElementById('must-include').value,
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListV23', JSON.stringify(state));
+        localStorage.setItem('theGuestListV24', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -586,13 +551,13 @@
             searchQuery += ` -intitle:"reaction" -intitle:"reacts"`;
         } else if (squelchLevel === 'med' || squelchLevel === 'hi') {
             
-            // Tier 1: Title-Only Squelch (Blocks English clickbait without penalizing transcript dialogue)
+            // Tier 1: Title-Only Squelch
             const titleSquelch = ['reaction', 'reacts', 'slam', 'destroyed', 'owned', 'responds'];
             titleSquelch.forEach(word => {
                 searchQuery += ` -intitle:"${word}"`;
             });
 
-            // Tier 2: Broad Squelch (Blocks foreign dubs and AI slop from all metadata fields)
+            // Tier 2: Broad Squelch
             const broadSquelch = ['hindi', 'urdu', 'kya', 'kaise', 'resumen', 'uno', 'una'];
             broadSquelch.forEach(word => {
                 searchQuery += ` -${word}`;
@@ -612,10 +577,7 @@
         }
 
         const timeVal = document.getElementById('timeframe').value;
-        const sortVal = document.getElementById('sort-order').value;
-        
-        const matrixKey = `${timeVal}_${sortVal}`;
-        const timeframeCode = spMatrix[matrixKey] || "EgYIAxABGAI%253D"; 
+        const timeframeCode = spMatrix[timeVal] || "EgYIAxABGAI%253D"; 
         
         const baseUrl = "https://www.youtube.com/results?search_query=";
         let finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&sp=" + timeframeCode + "&hl=en&gl=US";
