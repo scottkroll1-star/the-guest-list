@@ -344,7 +344,7 @@
 
 <div class="app-container">
     <h1>The Guest List</h1>
-    <p class="tagline">Tracking nomadic experts who bounce around the long-form ecosystem.</p>
+    <p class="tagline">The most efficient way to quickly find guests.</p>
 
     <div id="setup-view">
         
@@ -441,7 +441,6 @@
     const instructionsView = document.getElementById('instructions-view');
     const cardContainer = document.getElementById('card-container');
 
-    // spMatrix Engine Updates: "Today" explicitly locked to Type: Video and Duration: >20m
     const spMatrix = {
         "today_any_relevance": "CgQQARgC", 
         "today_short_relevance": "CgQQARgB", 
@@ -484,7 +483,7 @@
             history.replaceState(null, null, window.location.pathname);
         }
 
-        let savedState = JSON.parse(localStorage.getItem('theGuestListV21'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListV22'));
         
         if (!savedState) {
             addGuestRow('');
@@ -520,7 +519,7 @@
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListV21', JSON.stringify(state));
+        localStorage.setItem('theGuestListV22', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -602,7 +601,6 @@
         const squelchLevel = document.getElementById('squelch-level').value;
         let searchQuery = `"${guestName}"`;
 
-        // High Shield: Only mechanical difference is the intitle rule.
         if (squelchLevel === 'hi') {
             searchQuery = `intitle:"${guestName}"`;
         }
@@ -618,17 +616,23 @@
             });
         }
 
-        // Synchronization of Squelch Shields
-        let squelchWords = [];
+        // V22 Upgrade: Two-Tiered Squelch Shield to bypass the Transcript Trap
         if (squelchLevel === 'lo') {
-            squelchWords = ['reaction', 'reacts'];
+            searchQuery += ` -intitle:"reaction" -intitle:"reacts"`;
         } else if (squelchLevel === 'med' || squelchLevel === 'hi') {
-            squelchWords = ['reaction', 'reacts', 'slam', 'destroyed', 'owned', 'responds', 'hindi', 'urdu', 'kya', 'kaise', 'resumen', 'motivation', 'mindset', 'uno', 'una'];
-        }
+            
+            // Tier 1: Title-Only Squelch (Blocks English clickbait without penalizing transcript dialogue)
+            const titleSquelch = ['reaction', 'reacts', 'slam', 'destroyed', 'owned', 'responds'];
+            titleSquelch.forEach(word => {
+                searchQuery += ` -intitle:"${word}"`;
+            });
 
-        squelchWords.forEach(word => {
-            searchQuery += ` -${word}`;
-        });
+            // Tier 2: Broad Squelch (Blocks foreign dubs and AI slop from all metadata fields)
+            const broadSquelch = ['hindi', 'urdu', 'kya', 'kaise', 'resumen', 'uno', 'una'];
+            broadSquelch.forEach(word => {
+                searchQuery += ` -${word}`;
+            });
+        }
 
         const bannedInput = document.getElementById('banned-channels').value.trim();
         if (bannedInput !== "") {
