@@ -283,24 +283,16 @@
             border-radius: 20px;
             color: #ffffff;
         }
-        .instruction-block h2 {
-            margin-top: 0;
-            font-size: 20px;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 6px;
-        }
-        .manual-tagline {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--sub-text);
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-style: italic;
-            border-bottom: 1px solid #333;
-            padding-bottom: 16px;
-        }
         .doc-section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 0;
+            margin-bottom: 12px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 8px;
+        }
+        .doc-section-title-mt {
             font-size: 17px;
             font-weight: 700;
             color: #ffffff;
@@ -367,20 +359,17 @@
 
     <div id="instructions-view">
         <div class="instruction-block">
-            <h2>Operator Manual</h2>
-            <div class="manual-tagline">Tracking nomadic experts who bounce around the long-form ecosystem.</div>
-            
-            <div class="doc-section-title">1. How to Use</div>
+            <div class="doc-section-title">How to Use</div>
             <p><strong>Add Guests:</strong> Enter the names of the experts or personalities you wish to monitor. You can track as many guests as necessary.</p>
             <p><strong>Primary Controls:</strong> Select your desired timeframe and Spam Shield setting.<br>
             • <strong>Low:</strong> Minimal filtering.<br>
             • <strong>Medium & High:</strong> Both settings aggressively block reaction clips, summaries, and foreign translations. High mode additionally forces the guest's name to be in the video title.</p>
-            <p><strong>Advanced Settings:</strong> Use this menu to refine your search parameters. Whitelist specific topic keywords, or blacklist YouTube channels.</p>
+            <p><strong>Advanced Settings:</strong> Use this menu to refine your search parameters. Require specific topic keywords, or ban specific YouTube channels.</p>
             <p><strong>The Dashboard:</strong> Tap "Initialize Feed" to compile your list into a clean launch pad. Tap any card to launch a strictly filtered query. Swipe back when finished to return to your dashboard.</p>
 
-            <div class="doc-section-title">2. FAQ & Known Quirks</div>
+            <div class="doc-section-title-mt">FAQ</div>
             <p><strong>Q: Why am I seeing old videos when I search "Today"?</strong><br>
-            <strong>A:</strong> When a search yields exactly zero recent results, YouTube reacts in one of two ways. Occasionally, it will surrender and show a clean "No Results Found" page. More often, the algorithm refuses to show a blank page and instantly refills your screen with historical or popular videos to keep you clicking. If you search "Today" and the first video is weeks old, ignore the noise; it simply means your guest has no new appearances.</p>
+            <strong>A:</strong> If you search "Today" and the first video is days or weeks old, ignore the noise; it simply means your guest has no new appearances. Typically, the algorithm refuses to show a blank page and instantly refills your screen with historical or popular videos to keep you clicking.</p>
         </div>
         <button class="back-btn" onclick="returnViaButton()">← Back</button>
     </div>
@@ -394,7 +383,7 @@
     const instructionsView = document.getElementById('instructions-view');
     const cardContainer = document.getElementById('card-container');
 
-    // V24 Engine Hard-Lock: All searches locked to Relevance, Type: Video, Duration: >20m
+    // V25 Engine Hard-Lock: All searches locked to Relevance, Type: Video, Duration: >20m
     const spMatrix = {
         "today": "CgQQARgC",
         "week": "EgYIAxABGAI%253D",
@@ -420,7 +409,7 @@
             history.replaceState(null, null, window.location.pathname);
         }
 
-        let savedState = JSON.parse(localStorage.getItem('theGuestListV24'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListV25'));
         
         if (!savedState) {
             addGuestRow('');
@@ -450,7 +439,7 @@
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListV24', JSON.stringify(state));
+        localStorage.setItem('theGuestListV25', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
