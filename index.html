@@ -377,23 +377,6 @@
                 </select>
             </div>
 
-            <div class="advanced-row-internal">
-                <div class="advanced-label">Video Length:</div>
-                <select id="video-length" class="adv-select" onchange="saveState()">
-                    <option value="any">Any Length</option>
-                    <option value="short">Short (< 4m)</option>
-                    <option value="long" selected>Long (20m+)</option>
-                </select>
-            </div>
-
-            <div class="advanced-row-internal">
-                <div class="advanced-label">Broadcast:</div>
-                <select id="live-status" class="adv-select" onchange="saveState()">
-                    <option value="all" selected>All Videos</option>
-                    <option value="live">Live Now</option>
-                </select>
-            </div>
-
             <div class="advanced-label label-stacked">Must Include (Keywords):</div>
             <input type="text" id="must-include" class="chaos-input" placeholder="e.g., Apple, Bitcoin" oninput="saveState()">
 
@@ -422,7 +405,7 @@
             <p><strong>Primary Controls:</strong> Select your desired timeframe and Spam Shield setting.<br>
             • <strong>Low:</strong> Minimal filtering.<br>
             • <strong>Medium & High:</strong> Both settings aggressively block reaction clips, summaries, and foreign translations. High mode additionally forces the guest's name to be in the video title.</p>
-            <p><strong>Advanced Settings:</strong> Use this menu to refine your search parameters. Filter by exact video length, active Live Streams, whitelisted topic keywords, or blacklisted YouTube channels.</p>
+            <p><strong>Advanced Settings:</strong> Use this menu to refine your search parameters. Whitelist specific topic keywords, or blacklist YouTube channels.</p>
             <p><strong>The Dashboard:</strong> Tap "Initialize Feed" to compile your list into a clean launch pad. Tap any card to launch a strictly filtered query. Swipe back when finished to return to your dashboard.</p>
 
             <div class="doc-section-title">2. FAQ & Known Quirks</div>
@@ -441,27 +424,14 @@
     const instructionsView = document.getElementById('instructions-view');
     const cardContainer = document.getElementById('card-container');
 
+    // V23 Engine Hard-Lock: All searches strictly locked to Type: Video and Duration: >20m
     const spMatrix = {
-        "today_any_relevance": "CgQQARgC", 
-        "today_short_relevance": "CgQQARgB", 
-        "today_long_relevance": "CgQQARgC",
-        "today_any_popular": "CAISBggBEAEYAg%253D%253D",
-        "today_short_popular": "CAISBggBEAEYAQ%253D%253D",
-        "today_long_popular": "CAISBggBEAEYAg%253D%253D",
-        
-        "week_any_relevance": "CgIIAw%253D%253D",
-        "week_short_relevance": "CgIQAxgB",
-        "week_long_relevance": "EgYIAxABGAI%253D",
-        "week_any_popular": "CAMSBAgDEAE%253D",
-        "week_short_popular": "CAMSBggDEAEYAQ%253D%253D",
-        "week_long_popular": "CAMSBggDEAEYAg%253D%253D",
-        
-        "month_any_relevance": "CgIIBA%253D%253D",
-        "month_short_relevance": "CgIQBBgB",
-        "month_long_relevance": "EgYIBBABGAI%253D",
-        "month_any_popular": "CAMSBAgEEAE%253D",
-        "month_short_popular": "CAMSBggEEAEYAQ%253D%253D",
-        "month_long_popular": "CAMSBggEEAEYAg%253D%253D"
+        "today_relevance": "CgQQARgC",
+        "today_popular": "CAISBggBEAEYAg%253D%253D",
+        "week_relevance": "EgYIAxABGAI%253D",
+        "week_popular": "CAMSBggDEAEYAg%253D%253D",
+        "month_relevance": "EgYIBBABGAI%253D",
+        "month_popular": "CAMSBggEEAEYAg%253D%253D"
     };
 
     window.addEventListener('hashchange', () => {
@@ -483,7 +453,7 @@
             history.replaceState(null, null, window.location.pathname);
         }
 
-        let savedState = JSON.parse(localStorage.getItem('theGuestListV22'));
+        let savedState = JSON.parse(localStorage.getItem('theGuestListV23'));
         
         if (!savedState) {
             addGuestRow('');
@@ -496,8 +466,6 @@
             if (savedState.timeframe) document.getElementById('timeframe').value = savedState.timeframe;
             if (savedState.squelchLevel) document.getElementById('squelch-level').value = savedState.squelchLevel;
             if (savedState.sortOrder) document.getElementById('sort-order').value = savedState.sortOrder;
-            if (savedState.videoLength) document.getElementById('video-length').value = savedState.videoLength;
-            if (savedState.liveStatus) document.getElementById('live-status').value = savedState.liveStatus;
             if (savedState.mustInclude) document.getElementById('must-include').value = savedState.mustInclude;
             if (savedState.bannedChannels) document.getElementById('banned-channels').value = savedState.bannedChannels;
         }
@@ -513,13 +481,11 @@
             timeframe: document.getElementById('timeframe').value,
             squelchLevel: document.getElementById('squelch-level').value,
             sortOrder: document.getElementById('sort-order').value,
-            videoLength: document.getElementById('video-length').value,
-            liveStatus: document.getElementById('live-status').value,
             mustInclude: document.getElementById('must-include').value,
             bannedChannels: document.getElementById('banned-channels').value
         };
         
-        localStorage.setItem('theGuestListV22', JSON.stringify(state));
+        localStorage.setItem('theGuestListV23', JSON.stringify(state));
     }
 
     function addGuestRow(value) {
@@ -616,7 +582,6 @@
             });
         }
 
-        // V22 Upgrade: Two-Tiered Squelch Shield to bypass the Transcript Trap
         if (squelchLevel === 'lo') {
             searchQuery += ` -intitle:"reaction" -intitle:"reacts"`;
         } else if (squelchLevel === 'med' || squelchLevel === 'hi') {
@@ -648,17 +613,9 @@
 
         const timeVal = document.getElementById('timeframe').value;
         const sortVal = document.getElementById('sort-order').value;
-        const lengthVal = document.getElementById('video-length').value;
-        const liveVal = document.getElementById('live-status').value;
         
-        let timeframeCode = "";
-
-        if (liveVal === 'live') {
-            timeframeCode = "EgJAAQ%253D%253D"; 
-        } else {
-            const matrixKey = `${timeVal}_${lengthVal}_${sortVal}`;
-            timeframeCode = spMatrix[matrixKey] || "CgIIAQ%253D%253D"; 
-        }
+        const matrixKey = `${timeVal}_${sortVal}`;
+        const timeframeCode = spMatrix[matrixKey] || "EgYIAxABGAI%253D"; 
         
         const baseUrl = "https://www.youtube.com/results?search_query=";
         let finalUrl = baseUrl + encodeURIComponent(searchQuery) + "&sp=" + timeframeCode + "&hl=en&gl=US";
